@@ -1,6 +1,10 @@
 using System.Text;
+using FUNewsManagement_CoreAPI.BLL.Implements;
+using FUNewsManagement_CoreAPI.BLL.Interfaces;
 using FUNewsManagement_CoreAPI.DAL.Data;
 using FUNewsManagement_CoreAPI.DAL.Entities;
+using FUNewsManagement_CoreAPI.DAL.Implements;
+using FUNewsManagement_CoreAPI.DAL.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +18,16 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 builder.Services.AddDbContext<FUNMSDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("SqlServer")));
+
+builder.Services.AddTransient<ISystemAccountRepository, SystemAccountRepository>();
+builder.Services.AddTransient<ITagRepository, TagRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
+builder.Services.AddTransient<INewsArticleRepository, NewsArticleRepository>();
+
+builder.Services.AddTransient<ITagService, TagService>();
+builder.Services.AddTransient<INewsArticleService, NewsArticleService>();
+builder.Services.AddTransient<ISystemAccountService, SystemAccountService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);

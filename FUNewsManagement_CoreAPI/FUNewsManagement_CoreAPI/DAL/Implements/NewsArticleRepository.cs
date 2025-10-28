@@ -1,6 +1,8 @@
-﻿namespace FUNewsManagement_CoreAPI.DAL.Implements
+﻿using FUNewsManagement_CoreAPI.DAL.Interfaces;
+
+namespace FUNewsManagement_CoreAPI.DAL.Implements
 {
-    public class NewsArticleRepository
+    public class NewsArticleRepository : INewsArticleRepository
     {
     }
 }

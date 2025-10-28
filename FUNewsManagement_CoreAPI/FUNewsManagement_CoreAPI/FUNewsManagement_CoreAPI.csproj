@@ -22,11 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BLL\Interfaces\" />
-    <Folder Include="BLL\Implements\" />
     <Folder Include="DAL\Data\" />
-    <Folder Include="DAL\Interfaces\" />
-    <Folder Include="DAL\Implements\" />
   </ItemGroup>
 
 </Project>

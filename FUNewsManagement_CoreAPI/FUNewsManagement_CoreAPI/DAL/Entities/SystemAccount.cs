@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FUNewsManagement_CoreAPI.DAL.Entities;
 
 public partial class SystemAccount
 {
+    [Key]
     public short AccountId { get; set; }
 
     public string? AccountName { get; set; }
