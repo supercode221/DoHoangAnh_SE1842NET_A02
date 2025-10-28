@@ -4,6 +4,7 @@ using FUNewsManagement_CoreAPI.BLL.Models;
 using FUNewsManagement_CoreAPI.BLL.Services.Interfaces;
 using FUNewsManagement_CoreAPI.DAL.Entities;
 using FUNewsManagement_CoreAPI.DAL.Repositories.Interfaces;
+using FUNewsManagement_CoreAPI.Middlewares;
 using FUNMS.DAL.Repositories.Interfaces;
 
 namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
@@ -12,11 +13,13 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
     {
         private readonly INewsArticleRepository _repo;
         private readonly ITagRepository _tagRepo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public NewsService(INewsArticleRepository repo, ITagRepository tagRepo)
+        public NewsService(INewsArticleRepository repo, ITagRepository tagRepo, IHttpContextAccessor httpContextAccessor)
         {
             _repo = repo;
             _tagRepo = tagRepo;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<PaginationResponse<NewsArticleViewDTO>> GetAllAsync(NewsArticleFilter filter)
@@ -147,6 +150,14 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
             await _repo.AddAsync(duplicatedNews);
             await _repo.SaveAsync();
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "DUPLICATE",
+                "NewsArticle",
+                news,
+                ""
+            );
         }
 
         public async Task AddNewNews(NewsAddDTO dto)
@@ -204,6 +215,14 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
             await _repo.AddAsync(news);
             await _repo.SaveAsync();
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "ADD",
+                "NewsArticle",
+                news,
+                ""
+            );
         }
 
         public async Task DeleteNewsAsync(string id)
@@ -220,6 +239,14 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
             {
                 news.Tags.Clear();
             }
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "DELETE",
+                "NewsArticle",
+                news,
+                ""
+            );
 
             _repo.Delete(news);
             await _repo.SaveAsync();
@@ -246,9 +273,20 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
                 throw new Exception("Invalid updated by info.");
 
             var existingNews = await _repo.GetByIdWithTagsAsync(dto.NewsArticleId);
-
             if (existingNews == null)
                 throw new Exception($"News with ID {dto.NewsArticleId} does not exist.");
+
+            var before = new
+            {
+                existingNews.NewsArticleId,
+                existingNews.NewsTitle,
+                existingNews.Headline,
+                existingNews.NewsContent,
+                existingNews.NewsSource,
+                existingNews.NewsStatus,
+                existingNews.CategoryId,
+                Tags = existingNews.Tags?.Select(t => new { t.TagId, t.TagName })
+            };
 
             existingNews.NewsTitle = dto.NewsTitle;
             existingNews.Headline = dto.Headline;
@@ -262,9 +300,7 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
             if (dto.TagIdList != null)
             {
                 var newTags = await _tagRepo.GetTagsByIdsAsync(dto.TagIdList);
-
                 existingNews.Tags.Clear();
-
                 foreach (var tag in newTags)
                 {
                     existingNews.Tags.Add(tag);
@@ -273,6 +309,26 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
             _repo.Update(existingNews);
             await _repo.SaveAsync();
+
+            var after = new
+            {
+                existingNews.NewsArticleId,
+                existingNews.NewsTitle,
+                existingNews.Headline,
+                existingNews.NewsContent,
+                existingNews.NewsSource,
+                existingNews.NewsStatus,
+                existingNews.CategoryId,
+                Tags = existingNews.Tags?.Select(t => new { t.TagId, t.TagName })
+            };
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "UPDATE",
+                "NewsArticle",
+                before,
+                after
+            );
         }
     }
 }

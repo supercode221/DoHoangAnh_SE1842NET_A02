@@ -2,6 +2,7 @@
 using FUNewsManagement_CoreAPI.BLL.DTOs.SystemAccount;
 using FUNewsManagement_CoreAPI.BLL.Services.Interfaces;
 using FUNewsManagement_CoreAPI.DAL.Entities;
+using FUNewsManagement_CoreAPI.Middlewares;
 using FUNFUNewsManagement_CoreAPIMS.DAL.Repositories.Interfaces;
 
 namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
@@ -11,11 +12,13 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
         private readonly ISystemAccountRepository _repository;
         private readonly AuthService _authService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public SystemAccountService(ISystemAccountRepository repository, AuthService authService)
+        public SystemAccountService(ISystemAccountRepository repository, AuthService authService, IHttpContextAccessor httpContextAccessor)
         {
             _repository = repository;
             _authService = authService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<SystemAccount> CreateAsync(SystemAccountAddDTO account)
@@ -45,6 +48,15 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
             await _repository.AddAsync(systemAccount);
             await _repository.SaveAsync();
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "ADD",
+                "SystemAccount",
+                systemAccount,
+                ""
+            );
+
             return systemAccount;
         }
 
@@ -58,6 +70,14 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
             {
                 throw new Exception("There is articles associated with this account");
             }
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "ADD",
+                "SystemAccount",
+                existing,
+                ""
+            );
 
             _repository.Delete(existing);
             await _repository.SaveAsync();
@@ -145,12 +165,22 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
                 AccountRole = accountReal.AccountRole,
             };
 
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "ADD",
+                "SystemAccount",
+                accountReal,
+                updated
+            );
+
             return updated;
         }
 
         public async Task<SystemAccountAuthDTO> GetAuth(string email)
         {
             var account = await _repository.GetByEmailAsync(email);
+
+            if (account == null) return null;
 
             SystemAccountAuthDTO auth = new SystemAccountAuthDTO
             {

@@ -2,16 +2,19 @@
 using FUNewsManagement_CoreAPI.BLL.Services.Interfaces;
 using FUNewsManagement_CoreAPI.DAL.Entities;
 using FUNewsManagement_CoreAPI.DAL.Repositories.Interfaces;
+using FUNewsManagement_CoreAPI.Middlewares;
 
 namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 {
     public class TagService : ITagService
     {
         private readonly ITagRepository _repo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public TagService(ITagRepository repo)
+        public TagService(ITagRepository repo, IHttpContextAccessor httpContextAccessor)
         {
             _repo = repo;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<TagViewDTO>> GetAllAsync(string? searchKey)
@@ -68,6 +71,14 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
             };
             await _repo.AddAsync(newTag);
             await _repo.SaveAsync();
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "ADD",
+                "Tag",
+                newTag,
+                ""
+            );
         }
 
         public async Task UpdateAsync(TagEditDTO dto)
@@ -82,11 +93,21 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
             if (tags.Any(t => t.TagName == dto.TagName)) throw new Exception("Tag name existed.");
 
+            var oldTag = tag;
+
             tag.TagName = dto.TagName;
             tag.Note = dto.Note;
 
             _repo.Update(tag);
             await _repo.SaveAsync();
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "UPDATE",
+                "Tag",
+                oldTag,
+                tag
+            );
         }
 
         public async Task DeleteAsync(int id)
@@ -97,6 +118,14 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
             if (tag.NewsArticles.Any())
                 throw new Exception("Cannot delete tag that is referenced by articles.");
+
+            await AuditLogger.LogAsync(
+                _httpContextAccessor.HttpContext!,
+                "DELETE",
+                "Tag",
+                tag,
+                ""
+            );
 
             _repo.Delete(tag);
             await _repo.SaveAsync();

@@ -2,16 +2,19 @@
 using FUNewsManagement_CoreAPI.BLL.Services.Interfaces;
 using FUNewsManagement_CoreAPI.DAL.Entities;
 using FUNewsManagement_CoreAPI.DAL.Repositories.Interfaces;
+using FUNewsManagement_CoreAPI.Middlewares;
 
 namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 {
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _repo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CategoryService(ICategoryRepository repo)
+        public CategoryService(ICategoryRepository repo, IHttpContextAccessor httpContextAccessor)
         {
             _repo = repo;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task AddCategoryAsync(CategoryAddDTO dto)
@@ -48,6 +51,14 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
                 await _repo.AddAsync(category);
                 await _repo.SaveAsync();
+
+                await AuditLogger.LogAsync(
+                    _httpContextAccessor.HttpContext!,
+                    "ADD",
+                    "Category",
+                    category,
+                    ""
+                );
             }
             catch (Exception ex)
             {
@@ -99,11 +110,21 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
                     throw new Exception("This category is associated with an article and cannot change its parent category.");
             }
 
+            var oldCate = category;
+
             // --- Apply updates ---
             category.CategoryName = dto.CategoryName.Trim();
             category.ParentCategoryId = dto.CategoryParentId;
             category.CategoryDesciption = dto.CategoryDescription;
             category.IsActive = dto.IsActive;
+
+            await AuditLogger.LogAsync(
+                    _httpContextAccessor.HttpContext!,
+                    "UPDATE",
+                    "Category",
+                    oldCate,
+                    category
+                );
 
             _repo.Update(category);
             await _repo.SaveAsync();
@@ -118,6 +139,14 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
 
             if (category.NewsArticles != null && category.NewsArticles.Any())
                 throw new Exception("This category is associated with an article and cannot delete it.");
+
+            await AuditLogger.LogAsync(
+                    _httpContextAccessor.HttpContext!,
+                    "DELETE",
+                    "Category",
+                    category,
+                    ""
+                );
 
             _repo.Delete(category);
             await _repo.SaveAsync();

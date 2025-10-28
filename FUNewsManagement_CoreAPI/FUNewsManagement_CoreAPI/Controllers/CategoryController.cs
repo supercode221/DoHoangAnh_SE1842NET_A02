@@ -40,7 +40,7 @@ namespace FUNewsManagement_CoreAPI.Controllers
             }
         }
 
-        //[Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff")]
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] CategoryAddDTO dto)
         {
@@ -63,7 +63,7 @@ namespace FUNewsManagement_CoreAPI.Controllers
             }
         }
 
-        //[Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff")]
         [HttpPut]
         public async Task<IActionResult> EditCategory([FromBody] CategoryEditDTO dto)
         {
@@ -86,7 +86,7 @@ namespace FUNewsManagement_CoreAPI.Controllers
             }
         }
 
-        //[Authorize(Roles = "Staff")]
+        [Authorize(Roles = "Staff")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory([FromRoute] short id)
         {

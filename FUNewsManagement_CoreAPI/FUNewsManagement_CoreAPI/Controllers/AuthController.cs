@@ -66,7 +66,7 @@ namespace FUNewsManagement_CoreAPI.Controllers
             {
                 return Unauthorized(new APIResponse<string>
                 {
-                    StatusCode = 401,
+                    StatusCode = 400,
                     Message = "Invalid email or password."
                 });
             }
