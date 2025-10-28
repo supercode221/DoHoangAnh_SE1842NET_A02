@@ -39,6 +39,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+// Odata
 builder.Services.AddControllers().AddOData(
     options => options
         .Select()
