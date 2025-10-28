@@ -1,10 +1,13 @@
 using System.Text;
-using FUNewsManagement_CoreAPI.BLL.Implements;
-using FUNewsManagement_CoreAPI.BLL.Interfaces;
+using FUNewsManagement_CoreAPI.BLL.Services.Implements;
+using FUNewsManagement_CoreAPI.BLL.Services.Interfaces;
 using FUNewsManagement_CoreAPI.DAL.Data;
 using FUNewsManagement_CoreAPI.DAL.Entities;
-using FUNewsManagement_CoreAPI.DAL.Implements;
-using FUNewsManagement_CoreAPI.DAL.Interfaces;
+using FUNewsManagement_CoreAPI.DAL.Repositories.Implements;
+using FUNewsManagement_CoreAPI.DAL.Repositories.Interfaces;
+using FUNFUNewsManagement_CoreAPIMS.DAL.Repositories.Interfaces;
+using FUNMS.DAL.Repositories.Implements;
+using FUNMS.DAL.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
@@ -13,21 +16,25 @@ using Microsoft.OData.ModelBuilder;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Config
 var configuration = builder.Configuration;
 
+// Services.
 builder.Services.AddDbContext<FUNMSDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("SqlServer")));
 
+// Repo
+builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<ISystemAccountRepository, SystemAccountRepository>();
-builder.Services.AddTransient<ITagRepository, TagRepository>();
-builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddTransient<INewsArticleRepository, NewsArticleRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
-builder.Services.AddTransient<ITagService, TagService>();
-builder.Services.AddTransient<INewsArticleService, NewsArticleService>();
+// Services
 builder.Services.AddTransient<ISystemAccountService, SystemAccountService>();
+builder.Services.AddTransient<AuthService>();
+builder.Services.AddTransient<INewsService, NewsService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<ITagService, TagService>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
@@ -65,6 +72,7 @@ builder.Services.AddControllers().AddOData(
         .AddRouteComponents("api", GetEdmModel())
     );
 
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -79,7 +87,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -87,11 +94,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseCors("AllowAll");
-
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
