@@ -3,24 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\dal\\entities\\newsarticle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\dal\\entities\\newsarticle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\controllers\\analyticscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\controllers\\analyticscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\dal\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\dal\\entities\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\bll\\implements\\newsarticleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\bll\\implements\\newsarticleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\dal\\data\\funmsdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\dal\\data\\funmsdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\bll\\interfaces\\inewsarticleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\bll\\interfaces\\inewsarticleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\dal\\entities\\systemaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\dal\\entities\\systemaccount.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\dal\\repositories\\interfaces\\inewsarticlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\dal\\repositories\\interfaces\\inewsarticlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\dal\\entities\\tag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\dal\\entities\\tag.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_analyticsapi\\funewsmanagement_analyticsapi\\dal\\repositories\\implements\\newsarticlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{74729F65-F1CA-4626-8168-C5E3144AAE2C}|FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI.csproj|solutionrelative:funewsmanagement_analyticsapi\\dal\\repositories\\implements\\newsarticlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,73 +30,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 284,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 213,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Tag.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\Tag.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\Tag.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\Tag.cs",
-              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\Tag.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T12:32:57.538Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "SystemAccount.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\SystemAccount.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\SystemAccount.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\SystemAccount.cs",
-              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\SystemAccount.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T12:32:55.15Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "NewsArticle.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\NewsArticle.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\NewsArticle.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\NewsArticle.cs",
-              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\NewsArticle.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAgwCIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T12:32:52.499Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Category.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\Category.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\Category.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\Category.cs",
-              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\DAL\\Entities\\Category.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T12:32:46.551Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FUNMSDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Data\\FUNMSDbContext.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\DAL\\Data\\FUNMSDbContext.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Data\\FUNMSDbContext.cs",
-              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\DAL\\Data\\FUNMSDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T12:30:19.815Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
@@ -932,6 +867,71 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NewsArticleService.cs",
+              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\BLL\\Implements\\NewsArticleService.cs",
+              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\BLL\\Implements\\NewsArticleService.cs",
+              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\BLL\\Implements\\NewsArticleService.cs",
+              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\BLL\\Implements\\NewsArticleService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T10:40:04.378Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "INewsArticleService.cs",
+              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\BLL\\Interfaces\\INewsArticleService.cs",
+              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\BLL\\Interfaces\\INewsArticleService.cs",
+              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\BLL\\Interfaces\\INewsArticleService.cs",
+              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\BLL\\Interfaces\\INewsArticleService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T10:39:34.117Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "INewsArticleRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Repositories\\Interfaces\\INewsArticleRepository.cs",
+              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\DAL\\Repositories\\Interfaces\\INewsArticleRepository.cs",
+              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Repositories\\Interfaces\\INewsArticleRepository.cs",
+              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\DAL\\Repositories\\Interfaces\\INewsArticleRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T10:33:25.985Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NewsArticleRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Repositories\\Implements\\NewsArticleRepository.cs",
+              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\DAL\\Repositories\\Implements\\NewsArticleRepository.cs",
+              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\DAL\\Repositories\\Implements\\NewsArticleRepository.cs",
+              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\DAL\\Repositories\\Implements\\NewsArticleRepository.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAcwE0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T10:33:24.247Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AnalyticsController.cs",
+              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\Controllers\\AnalyticsController.cs",
+              "RelativeDocumentMoniker": "FUNewsManagement_AnalyticsAPI\\Controllers\\AnalyticsController.cs",
+              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_AnalyticsAPI\\FUNewsManagement_AnalyticsAPI\\Controllers\\AnalyticsController.cs",
+              "RelativeToolTip": "FUNewsManagement_AnalyticsAPI\\Controllers\\AnalyticsController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAB8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-10-29T10:24:23.142Z",
+              "EditorCaption": ""
             }
           ]
         },

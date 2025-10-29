@@ -33,6 +33,8 @@ public partial class NewsArticle
 
     public DateTime? ModifiedDate { get; set; }
 
+    public long? View { get; set; }
+
     public virtual Category? Category { get; set; }
 
     public virtual SystemAccount? CreatedBy { get; set; }
