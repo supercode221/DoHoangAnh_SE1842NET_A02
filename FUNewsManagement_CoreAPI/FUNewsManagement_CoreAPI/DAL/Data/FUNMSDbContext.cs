@@ -59,6 +59,7 @@ public partial class FUNMSDbContext : DbContext
             entity.Property(e => e.NewsSource).HasMaxLength(400);
             entity.Property(e => e.NewsTitle).HasMaxLength(400);
             entity.Property(e => e.UpdatedById).HasColumnName("UpdatedByID");
+            entity.Property(e => e.View).HasColumnName("View");
 
             entity.HasOne(d => d.Category).WithMany(p => p.NewsArticles)
                 .HasForeignKey(d => d.CategoryId)

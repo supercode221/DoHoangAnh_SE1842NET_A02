@@ -15,7 +15,7 @@ namespace FUNewsManagement_AnalyticsAPI.DAL.Repositories.Implements
             _context = context;
         }
 
-        public async Task<List<NewsAnalyticsDTO>> GetNewsAnalyticsAsync(
+        public async Task<AnalyticsDTO> GetNewsAnalyticsAsync(
             DateTime? from = null,
             DateTime? to = null,
             int categoryId = 0,
@@ -40,7 +40,7 @@ namespace FUNewsManagement_AnalyticsAPI.DAL.Repositories.Implements
                 {
                     CategoryId = n.CategoryId,
                     CategoryName = n.Category.CategoryName,
-                    Status = n.NewsStatus
+                    IsPublished = n.NewsStatus ?? false
                 })
                 .ToListAsync();
 
@@ -48,36 +48,35 @@ namespace FUNewsManagement_AnalyticsAPI.DAL.Repositories.Implements
                 .Select(c => new { c.CategoryId, c.CategoryName })
                 .ToListAsync();
 
-            var result = allCategories
-                .GroupJoin(
-                    newsList,
-                    c => c.CategoryId,
-                    n => n.CategoryId,
-                    (c, newsGroup) => new
+            var categoryStats = allCategories
+                .Select(c =>
+                {
+                    var categoryNews = newsList.Where(n => n.CategoryId == c.CategoryId).ToList();
+
+                    return new NewsAnalyticsDTO
                     {
-                        c.CategoryName,
-                        NewsByStatus = newsGroup
-                            .GroupBy(n => n.Status)
-                            .Select(g => new NewsAnalyticsDTO
-                            {
-                                Category = c.CategoryName,
-                                Status = g.Key,
-                                Count = g.Count()
-                            })
-                            .DefaultIfEmpty(new NewsAnalyticsDTO
-                            {
-                                Category = c.CategoryName,
-                                Status = false,
-                                Count = 0
-                            })
-                    })
-                .SelectMany(c => c.NewsByStatus)
+                        Category = c.CategoryName,
+                        Published = categoryNews.Count(n => n.IsPublished),
+                        NotPublished = categoryNews.Count(n => !n.IsPublished)
+                    };
+                })
                 .OrderBy(x => x.Category)
-                .ThenBy(x => x.Status)
                 .ToList();
 
-            return result;
+            var totalPublished = categoryStats.Sum(x => x.Published);
+            var totalNotPublished = categoryStats.Sum(x => x.NotPublished);
+
+            return new AnalyticsDTO
+            {
+                NewsAnalytics = categoryStats,
+                NewsStatusAnalytics = new NewsStatusAnalyticsDTO
+                {
+                    TotalPublished = totalPublished,
+                    TotalNotPublished = totalNotPublished
+                }
+            };
         }
+
 
         public async Task<IEnumerable<NewsArticleDTO>> GetTrendingNewsArticles(
             DateTime? from = null,

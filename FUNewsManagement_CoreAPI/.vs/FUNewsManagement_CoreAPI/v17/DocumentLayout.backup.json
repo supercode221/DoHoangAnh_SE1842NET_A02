@@ -3,32 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_coreapi\\funewsmanagement_coreapi\\middlewares\\auditlogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|solutionrelative:funewsmanagement_coreapi\\middlewares\\auditlogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_coreapi\\funewsmanagement_coreapi\\middlewares\\requestloggingmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|solutionrelative:funewsmanagement_coreapi\\middlewares\\requestloggingmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_coreapi\\funewsmanagement_coreapi\\bll\\services\\implements\\newsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|solutionrelative:funewsmanagement_coreapi\\bll\\services\\implements\\newsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_coreapi\\funewsmanagement_coreapi\\dal\\repositories\\implements\\newsarticlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|solutionrelative:funewsmanagement_coreapi\\dal\\repositories\\implements\\newsarticlerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_coreapi\\funewsmanagement_coreapi\\controllers\\newscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|solutionrelative:funewsmanagement_coreapi\\controllers\\newscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_coreapi\\funewsmanagement_coreapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|solutionrelative:funewsmanagement_coreapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_coreapi\\funewsmanagement_coreapi\\bll\\services\\implements\\systemaccountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|solutionrelative:funewsmanagement_coreapi\\bll\\services\\implements\\systemaccountservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|c:\\users\\hoanganhdev\\desktop\\fpt\\fall2025\\prn232\\dohoanganh_se1842net_a02\\funewsmanagement_coreapi\\funewsmanagement_coreapi\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6A8DB0B9-732E-4223-A9B0-208B1DFBEAA2}|FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI.csproj|solutionrelative:funewsmanagement_coreapi\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 284,
-          "SelectedChildIndex": 214,
+          "SelectedChildIndex": 210,
           "Children": [
             {
               "$type": "Bookmark",
@@ -878,93 +862,41 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Program.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\Program.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Program.cs",
-              "RelativeToolTip": "FUNewsManagement_CoreAPI\\Program.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAAEsAAAAqAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "NewsArticleRepository.cs",
+              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\DAL\\Repositories\\Implements\\NewsArticleRepository.cs",
+              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\DAL\\Repositories\\Implements\\NewsArticleRepository.cs",
+              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\DAL\\Repositories\\Implements\\NewsArticleRepository.cs",
+              "RelativeToolTip": "FUNewsManagement_CoreAPI\\DAL\\Repositories\\Implements\\NewsArticleRepository.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAGAAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T10:01:30.445Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "NewsController.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Controllers\\NewsController.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\Controllers\\NewsController.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Controllers\\NewsController.cs",
-              "RelativeToolTip": "FUNewsManagement_CoreAPI\\Controllers\\NewsController.cs",
-              "ViewState": "AgIAALMAAAAAAAAAAAAAwL0AAABdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T09:58:09.786Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "NewsService.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\NewsService.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\NewsService.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\NewsService.cs",
-              "RelativeToolTip": "FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\NewsService.cs",
-              "ViewState": "AgIAAPYAAAAAAAAAAAAmwC4BAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T09:59:24.448Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SystemAccountService.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\SystemAccountService.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\SystemAccountService.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\SystemAccountService.cs",
-              "RelativeToolTip": "FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\SystemAccountService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T09:59:23.702Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "CategoryController.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Controllers\\CategoryController.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\Controllers\\CategoryController.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Controllers\\CategoryController.cs",
-              "RelativeToolTip": "FUNewsManagement_CoreAPI\\Controllers\\CategoryController.cs",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAowDAAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T09:56:51.821Z",
+              "WhenOpened": "2025-10-29T10:47:57.68Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AuditLogger.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Middlewares\\AuditLogger.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\Middlewares\\AuditLogger.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Middlewares\\AuditLogger.cs",
-              "RelativeToolTip": "FUNewsManagement_CoreAPI\\Middlewares\\AuditLogger.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAmwBsAAAAqAAAAAAAAAA==",
+              "Title": "NewsService.cs",
+              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\NewsService.cs",
+              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\NewsService.cs",
+              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\NewsService.cs",
+              "RelativeToolTip": "FUNewsManagement_CoreAPI\\BLL\\Services\\Implements\\NewsService.cs",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAtwHQAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T09:58:01.709Z",
+              "WhenOpened": "2025-10-29T10:46:29.73Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "RequestLoggingMiddleware.cs",
-              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Middlewares\\RequestLoggingMiddleware.cs",
-              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\Middlewares\\RequestLoggingMiddleware.cs",
-              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Middlewares\\RequestLoggingMiddleware.cs",
-              "RelativeToolTip": "FUNewsManagement_CoreAPI\\Middlewares\\RequestLoggingMiddleware.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "NewsController.cs",
+              "DocumentMoniker": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Controllers\\NewsController.cs",
+              "RelativeDocumentMoniker": "FUNewsManagement_CoreAPI\\Controllers\\NewsController.cs",
+              "ToolTip": "C:\\Users\\hoanganhdev\\Desktop\\FPT\\FALL2025\\PRN232\\DoHoangAnh_SE1842NET_A02\\FUNewsManagement_CoreAPI\\FUNewsManagement_CoreAPI\\Controllers\\NewsController.cs",
+              "RelativeToolTip": "FUNewsManagement_CoreAPI\\Controllers\\NewsController.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAowDUAAABGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-28T12:10:33.841Z",
+              "WhenOpened": "2025-10-29T10:46:12.493Z",
               "EditorCaption": ""
             }
           ]

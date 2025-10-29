@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FUNewsManagement_AIAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9daef212349bda6e20d7476b2e9443b9681429c6")]
 [assembly: System.Reflection.AssemblyProductAttribute("FUNewsManagement_AIAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FUNewsManagement_AIAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

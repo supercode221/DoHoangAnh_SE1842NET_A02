@@ -29,5 +29,12 @@ namespace FUNewsManagement_AnalyticsAPI.Controllers
             var res = await _service.GetTrendingNewsArticles(filter);
             return Ok(res);
         }
+
+        [HttpGet("export")]
+        public async Task<IActionResult> ExportAnalytics()
+        {
+            var downloadLink = await _service.ExportAnalytics();
+            return Ok(downloadLink);
+        }
     }
 }

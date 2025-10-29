@@ -113,6 +113,7 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
                 CategoryName = a.Category?.CategoryName,
                 CreatedByName = a.CreatedBy?.AccountName,
                 tags = tags,
+                View = a.View
             };
 
             return map;

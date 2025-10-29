@@ -30,6 +30,8 @@ namespace FUNewsManagement_CoreAPI.BLL.DTOs.News
 
         public DateTime? ModifiedDate { get; set; }
 
+        public long? View { get; set; }
+
         public IEnumerable<NewsArticleViewDTO> related { get; set; }
 
         public IEnumerable<TagViewDTO> tags { get; set; }
