@@ -1,0 +1,356 @@
+﻿@page
+@model FUNewsManagement_FE.Pages.Admin.LogModel
+@{
+    ViewData["Title"] = "System Logs";
+}
+
+<style>
+    .active {
+        background-color: black;
+        color: white;
+    }
+
+    .log-entry {
+        border-left: 4px solid #e5e7eb;
+        transition: all 0.3s;
+    }
+
+        .log-entry:hover {
+            border-left-color: #3b82f6;
+            background-color: #f9fafb;
+        }
+
+    .log-CREATE {
+        border-left-color: #10b981;
+    }
+
+    .log-UPDATE {
+        border-left-color: #f59e0b;
+    }
+
+    .log-DELETE {
+        border-left-color: #ef4444;
+    }
+
+    .badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .badge-CREATE {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-UPDATE {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-DELETE {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    .json-viewer {
+        background-color: #1e293b;
+        color: #e2e8f0;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        font-family: 'Courier New', monospace;
+        font-size: 0.875rem;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+</style>
+
+<div class="container h-fit w-full">
+    <div class="card bg-white shadow-lg rounded-2xl">
+        <div class="card-header p-4 border-b">
+            <div class="flex gap-2 flex-wrap mb-4">
+                <button id="btnAuditLog" class="p-2 border border-black rounded-xl font-bold hover:bg-black hover:text-white transition active">
+                    Audit Log
+                </button>
+                <button id="btnSystemLog" class="p-2 border border-black rounded-xl font-bold hover:bg-black hover:text-white transition">
+                    Core System Log
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div>
+                    <label class="block text-sm font-medium mb-1">From Date</label>
+                    <input type="date" id="fromDate" class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">To Date</label>
+                    <input type="date" id="toDate" class="w-full p-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Action</label>
+                    <select id="filterAction" class="w-full p-2 border rounded-lg">
+                        <option value="">All Actions</option>
+                        <option value="CREATE">CREATE</option>
+                        <option value="UPDATE">UPDATE</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1">Entity</label>
+                    <input type="text" id="filterEntity" placeholder="e.g. NewsArticle" class="w-full p-2 border rounded-lg">
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-3">
+                <button id="btnApplyFilter" class="px-4 py-2 text-black border border-black rounded-lg hover:text-white hover:bg-black transition">
+                    Apply Filters
+                </button>
+                <button id="btnClearFilter" class="px-4 py-2 text-black rounded-lg hover:border hover:border-black transition">
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body p-4">
+            <div id="loadingSpinner" class="text-center py-8 hidden">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-blue-600"></div>
+                <p class="mt-2 text-gray-600">Loading logs...</p>
+            </div>
+
+            <div id="logContainer" class="space-y-3">
+                
+            </div>
+
+            <div id="noLogs" class="text-center py-8 text-gray-500 hidden">
+                No logs found matching your criteria.
+            </div>
+        </div>
+
+        <div class="card-footer p-4 border-t">
+            <div class="flex justify-between items-center">
+                <span id="logCount" class="text-sm text-gray-600">0 logs</span>
+                <button id="btnRefresh" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                    🔄 Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const API_BASE_URL = 'https://localhost:7000/api';
+
+        let currentLogs = [];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadAuditLogs();
+
+            document.getElementById('btnApplyFilter').addEventListener('click', loadAuditLogs);
+            document.getElementById('btnClearFilter').addEventListener('click', clearFilters);
+            document.getElementById('btnRefresh').addEventListener('click', loadAuditLogs);
+            document.getElementById('btnAuditLog').addEventListener('click', function () {
+                toggleTab('audit');
+            });
+            document.getElementById('btnSystemLog').addEventListener('click', function () {
+                toggleTab('system');
+            });
+        });
+
+        function toggleTab(tab) {
+            const auditBtn = document.getElementById('btnAuditLog');
+            const systemBtn = document.getElementById('btnSystemLog');
+
+            if (tab === 'audit') {
+                auditBtn.classList.add('active');
+                systemBtn.classList.remove('active');
+                loadAuditLogs();
+            } else {
+                systemBtn.classList.add('active');
+                auditBtn.classList.remove('active');
+                alert('System log feature coming soon!');
+            }
+        }
+
+        async function loadAuditLogs() {
+            showLoading(true);
+
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            const action = document.getElementById('filterAction').value;
+            const entity = document.getElementById('filterEntity').value;
+
+            let url = `${API_BASE_URL}/AuditLog?`;
+            if (fromDate) url += `fromDate=${fromDate}&`;
+            if (toDate) url += `toDate=${toDate}&`;
+            if (action) url += `action=${action}&`;
+            if (entity) url += `entity=${entity}&`;
+
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch logs');
+
+                const data = await response.json();
+                console.log('API Response:', data);
+
+                currentLogs = data.logs || data || [];
+                displayLogs(currentLogs);
+            } catch (error) {
+                console.error('Error loading logs:', error);
+                alert('Error loading logs. Please check console for details.');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function displayLogs(logs) {
+            const container = document.getElementById('logContainer');
+            const noLogsDiv = document.getElementById('noLogs');
+            const logCountSpan = document.getElementById('logCount');
+
+            container.innerHTML = '';
+
+            if (!logs || logs.length === 0) {
+                noLogsDiv.classList.remove('hidden');
+                container.classList.add('hidden');
+                logCountSpan.textContent = '0 logs';
+                return;
+            }
+
+            noLogsDiv.classList.add('hidden');
+            container.classList.remove('hidden');
+            logCountSpan.textContent = `${logs.length} log${logs.length !== 1 ? 's' : ''}`;
+
+            logs.forEach((log, index) => {
+                const logEntry = createLogEntry(log, index);
+                container.appendChild(logEntry);
+            });
+        }
+
+        function createLogEntry(log, index) {
+            const div = document.createElement('div');
+
+            const timestamp = log.timestamp || log.Timestamp || 'N/A';
+            const user = log.user || log.User || 'N/A';
+            const action = log.action || log.Action || 'N/A';
+            const entity = log.entity || log.Entity || 'N/A';
+            const ip = log.ip || log.IP || 'N/A';
+            const before = log.before || log.Before;
+            const after = log.after || log.After;
+
+            div.className = `log-entry log-${action} p-4 rounded-lg border`;
+
+            const beforeData = before && JSON.stringify(before) !== '""' && JSON.stringify(before) !== 'null'
+                ? JSON.stringify(before, null, 2)
+                : null;
+            const afterData = after && JSON.stringify(after) !== '""' && JSON.stringify(after) !== 'null'
+                ? JSON.stringify(after, null, 2)
+                : null;
+
+            div.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="badge badge-${action}">${action}</span>
+                            <span class="font-semibold text-gray-700">${entity}</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <span>👤 ${user}</span>
+                            <span class="mx-2">•</span>
+                            <span>🕐 ${formatTimestamp(timestamp)}</span>
+                            <span class="mx-2">•</span>
+                            <span>📍 ${ip}</span>
+                        </div>
+                    </div>
+                    <button onclick="toggleDetails(${index})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        <span id="toggleText${index}">Show Details ▼</span>
+                    </button>
+                </div>
+                <div id="details${index}" class="hidden mt-3 space-y-2">
+                    ${beforeData ? `
+                    <div>
+                        <h4 class="text-sm font-semibold mb-1">Before:</h4>
+                        <div class="json-viewer">${escapeHtml(beforeData)}</div>
+                    </div>
+                    ` : ''}
+                    ${afterData ? `
+                    <div>
+                        <h4 class="text-sm font-semibold mb-1">After:</h4>
+                        <div class="json-viewer">${escapeHtml(afterData)}</div>
+                    </div>
+                    ` : ''}
+                    ${!beforeData && !afterData ? '<p class="text-gray-500 text-sm">No detailed data available</p>' : ''}
+                </div>
+            `;
+
+            return div;
+        }
+
+        function toggleDetails(index) {
+            const details = document.getElementById(`details${index}`);
+            const toggleText = document.getElementById(`toggleText${index}`);
+
+            if (details.classList.contains('hidden')) {
+                details.classList.remove('hidden');
+                toggleText.textContent = 'Hide Details ▲';
+            } else {
+                details.classList.add('hidden');
+                toggleText.textContent = 'Show Details ▼';
+            }
+        }
+
+        function formatTimestamp(timestamp) {
+            if (!timestamp || timestamp === 'N/A') return 'N/A';
+
+            try {
+                const date = new Date(timestamp);
+                if (isNaN(date.getTime())) return timestamp;
+
+                return date.toLocaleString('vi-VN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            } catch (e) {
+                return timestamp;
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function clearFilters() {
+            document.getElementById('fromDate').value = '';
+            document.getElementById('toDate').value = '';
+            document.getElementById('filterAction').value = '';
+            document.getElementById('filterEntity').value = '';
+            loadAuditLogs();
+        }
+
+        function showLoading(show) {
+            const spinner = document.getElementById('loadingSpinner');
+            const container = document.getElementById('logContainer');
+            const noLogs = document.getElementById('noLogs');
+
+            if (show) {
+                spinner.classList.remove('hidden');
+                container.classList.add('hidden');
+                noLogs.classList.add('hidden');
+            } else {
+                spinner.classList.add('hidden');
+            }
+        }
+    </script>
+}

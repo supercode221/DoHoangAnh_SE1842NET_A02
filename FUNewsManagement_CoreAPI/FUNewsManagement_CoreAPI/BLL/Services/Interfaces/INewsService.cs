@@ -13,5 +13,6 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Interfaces
         Task AddNewNews(NewsAddDTO dto);
         Task DeleteNewsAsync(string id);
         Task UpdateNewsAsync(NewsEditDTO dto);
+        Task IncreaseNewsView(string id);
     }
 }

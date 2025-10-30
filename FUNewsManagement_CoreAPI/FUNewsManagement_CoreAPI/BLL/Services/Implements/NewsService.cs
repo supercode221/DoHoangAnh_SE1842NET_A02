@@ -201,7 +201,8 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
                 NewsSource = string.IsNullOrEmpty(dto.NewsSource) ? "N/A" : dto.NewsSource,
                 CategoryId = dto.CategoryId,
                 NewsStatus = dto.NewsStatus,
-                CreatedById = dto.CreatedById
+                CreatedById = dto.CreatedById,
+                View = 0
             };
 
             if (dto.TagIdList != null && dto.TagIdList.Any())
@@ -330,6 +331,11 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
                 before,
                 after
             );
+        }
+
+        public async Task IncreaseNewsView(string id)
+        {
+            await _repo.IncreaseNewsView(id);
         }
     }
 }

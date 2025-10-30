@@ -1,0 +1,1038 @@
+﻿@page
+@model DoHoangAnh_SE1842NET_A01_FE.Pages.Staff.IndexModel
+@{
+    ViewData["Title"] = "News Management";
+}
+
+<div class="w-screen mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+        <div class="flex justify-between items-center">
+            <h1 class="text-4xl font-bold text-gray-800">
+                <i class="fas fa-newspaper text-purple-600 mr-3"></i>News Management
+            </h1>
+            <button onclick="newsManager.showAddModal()" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center gap-2">
+                <i class="fas fa-plus"></i>
+                <span>Add News</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Search</label>
+                <input type="text" id="searchKey" placeholder="Search by title..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                <select id="categoryId" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Status</label>
+                <select id="newsStatus" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="">All Status</option>
+                    <option value="true">Published</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Items per page</label>
+                <select id="pageSize" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+        </div>
+        <div class="mt-4 flex gap-3">
+            <button id="searchBtn" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
+            <button id="resetBtn" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                <i class="fas fa-redo mr-2"></i>Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="bg-white rounded-2xl shadow-xl p-12 text-center">
+        <i class="fas fa-spinner fa-spin text-5xl text-purple-600 mb-4"></i>
+        <p class="text-gray-600 text-lg">Loading news articles...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="hidden bg-red-50 border-2 border-red-200 rounded-2xl shadow-xl p-8 text-center">
+        <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-4"></i>
+        <p class="text-red-700 text-lg font-semibold mb-2">Error</p>
+        <p id="errorMessage" class="text-red-600"></p>
+    </div>
+
+    <!-- News Table -->
+    <div id="newsTable" class="hidden bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">Title</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">Category</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">Author</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">Created Date</th>
+                        <th class="px-6 py-4 text-center text-sm font-bold uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="newsTableBody" class="divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-sm text-gray-700">
+                    Showing <span id="showingFrom" class="font-semibold">0</span> to <span id="showingTo" class="font-semibold">0</span> of <span id="totalItems" class="font-semibold">0</span> results
+                </div>
+                <div id="pagination" class="flex gap-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden bg-white rounded-2xl shadow-xl p-12 text-center">
+        <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-600 text-lg">No news articles found</p>
+    </div>
+</div>
+
+<!-- Add News Modal -->
+<div id="addNewsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full my-8 transform transition-all">
+        <div class="p-8">
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">
+                    <i class="fas fa-plus-circle text-purple-600 mr-2"></i>Add News Article
+                </h2>
+                <button onclick="newsManager.closeAddModal()" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div id="addSuccessMessage" class="hidden bg-green-50 border-2 border-green-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                    <div>
+                        <p class="text-green-800 font-semibold">Success!</p>
+                        <p class="text-green-700 text-sm">News article created successfully.</p>
+                    </div>
+                </div>
+            </div>
+            <div id="addErrorMessage" class="hidden bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-2xl text-red-600"></i>
+                    <div>
+                        <p class="text-red-800 font-semibold">Error!</p>
+                        <p id="addErrorText" class="text-red-700 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+            <form id="addNewsForm" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">News Title <span class="text-red-500">*</span></label>
+                    <input type="text" id="addNewsTitle" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter news title">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Headline <span class="text-red-500">*</span></label>
+                    <input type="text" id="addHeadline" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter headline">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">News Content <span class="text-red-500">*</span></label>
+                    <textarea id="addNewsContent" required rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter news content"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">News Source</label>
+                    <input type="text" id="addNewsSource" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter news source">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Category <span class="text-red-500">*</span></label>
+                        <select id="addCategoryId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Status <span class="text-red-500">*</span></label>
+                        <select id="addNewsStatus" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="true">Published</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex gap-5 items-center mb-3">
+                        <button id="tagGenBtn" type="button" class="bg-green-500 p-2 rounded-xl text-white hover:bg-green-600 transition">Generate Tags</button>
+                    </div>
+                    <div id="tagSuggestionList" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tags</label>
+                    <div id="addTagsList" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+                </div>
+            </form>
+            <div class="flex gap-4 pt-6 mt-6 border-t border-gray-200">
+                <button type="button" id="submitAddBtn" onclick="newsManager.createNews()" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
+                    <i class="fas fa-save"></i><span>Create News Article</span>
+                </button>
+                <button type="button" onclick="newsManager.closeAddModal()" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-times mr-2"></i>Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit News Modal -->
+<div id="editNewsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full my-8 transform transition-all">
+        <div class="p-8">
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">
+                    <i class="fas fa-edit text-purple-600 mr-2"></i>Edit News Article
+                </h2>
+                <button onclick="newsManager.closeEditModal()" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div id="editLoading" class="text-center py-12">
+                <i class="fas fa-spinner fa-spin text-4xl text-purple-600 mb-4"></i>
+                <p class="text-gray-600">Loading news article...</p>
+            </div>
+            <div id="editSuccessMessage" class="hidden bg-green-50 border-2 border-green-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                    <div>
+                        <p class="text-green-800 font-semibold">Success!</p>
+                        <p class="text-green-700 text-sm">News article updated successfully.</p>
+                    </div>
+                </div>
+            </div>
+            <div id="editErrorMessage" class="hidden bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-2xl text-red-600"></i>
+                    <div>
+                        <p class="text-red-800 font-semibold">Error!</p>
+                        <p id="editErrorText" class="text-red-700 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+            <form id="editNewsForm" class="hidden space-y-6 max-h-[60vh] overflow-y-auto pr-2">
+                <input type="hidden" id="editNewsArticleId">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">News Title <span class="text-red-500">*</span></label>
+                    <input type="text" id="editNewsTitle" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter news title">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Headline <span class="text-red-500">*</span></label>
+                    <input type="text" id="editHeadline" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter headline">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">News Content <span class="text-red-500">*</span></label>
+                    <textarea id="editNewsContent" required rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter news content"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">News Source</label>
+                    <input type="text" id="editNewsSource" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Enter news source">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Category <span class="text-red-500">*</span></label>
+                        <select id="editCategoryId" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Status <span class="text-red-500">*</span></label>
+                        <select id="editNewsStatus" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                            <option value="true">Published</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex gap-5 items-center mb-3">
+                        <button id="editTagGenBtn" type="button" class="bg-green-500 p-2 rounded-xl text-white hover:bg-green-600 transition">Generate Tags</button>
+                    </div>
+                    <div id="editTagSuggestionList" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tags</label>
+                    <div id="editTagsList" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+                </div>
+            </form>
+            <div id="editActionButtons" class="hidden flex gap-4 pt-6 mt-6 border-t border-gray-200">
+                <button type="button" id="submitEditBtn" onclick="newsManager.updateNews()" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
+                    <i class="fas fa-save"></i><span>Update News Article</span>
+                </button>
+                <button type="button" onclick="newsManager.closeEditModal()" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-times mr-2"></i>Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all">
+        <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-100 rounded-full mb-4">
+                <i class="fas fa-trash-alt text-3xl text-red-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 text-center mb-2">Delete News Article</h3>
+            <p class="text-gray-600 text-center mb-6">Are you sure you want to delete this news article? This action cannot be undone.</p>
+            <div class="flex gap-4">
+                <button id="cancelDelete" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">Cancel</button>
+                <button id="confirmDelete" class="flex-1 bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Duplicate Confirmation Modal -->
+<div id="duplicateModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all">
+        <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 mx-auto bg-blue-100 rounded-full mb-4">
+                <i class="fa-solid fa-clone text-3xl text-blue-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 text-center mb-2">Duplicate News Article</h3>
+            <p class="text-gray-600 text-center mb-6">Are you sure you want to duplicate this news article?</p>
+            <div class="flex gap-4">
+                <button id="cancelDuplicate" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">Cancel</button>
+                <button id="confirmDuplicate" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">Duplicate</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const CONFIG = {
+            API_BASE: 'https://localhost:7000/api',
+            AI_API_BASE: 'https://localhost:7001/api',
+            DEFAULT_PAGE_SIZE: 10,
+            SUCCESS_DELAY: 1500
+        };
+
+        const Utils = {
+            formatDate(dateString) {
+                return new Date(dateString).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            },
+
+            showElement(selector) {
+                $(selector).removeClass('hidden');
+            },
+
+            hideElement(selector) {
+                $(selector).addClass('hidden');
+            },
+
+            scrollToTop(selector = 'body') {
+                $(selector).scrollTop(0);
+            },
+
+            getSelectedCheckboxValues(name) {
+                return $(`input[name="${name}"]:checked`).map(function() {
+                    return parseInt($(this).val());
+                }).get();
+            },
+
+            setButtonLoading(selector, isLoading, loadingText, normalHtml) {
+                const $btn = $(selector);
+                if (isLoading) {
+                    $btn.prop('disabled', true).html(`<i class="fas fa-spinner fa-spin mr-2"></i>${loadingText}`);
+                } else {
+                    $btn.prop('disabled', false).html(normalHtml);
+                }
+            }
+        };
+
+        const ApiService = {
+            async request(endpoint, options = {}) {
+                const token = await ensureValidAccessToken();
+                if (!token) {
+                    window.location.href = "/Login";
+                    throw new Error('No valid token');
+                }
+
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: `${CONFIG.API_BASE}${endpoint}`,
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                            ...options.headers
+                        },
+                        ...options,
+                        success: resolve,
+                        error: reject
+                    });
+                });
+            },
+
+            async get(endpoint) {
+                return this.request(endpoint, { type: 'GET' });
+            },
+
+            async post(endpoint, data) {
+                return this.request(endpoint, {
+                    type: 'POST',
+                    data: JSON.stringify(data)
+                });
+            },
+
+            async put(endpoint, data) {
+                return this.request(endpoint, {
+                    type: 'PUT',
+                    data: JSON.stringify(data)
+                });
+            },
+
+            async delete(endpoint) {
+                return this.request(endpoint, { type: 'DELETE' });
+            }
+        };
+
+        const newsManager = {
+            state: {
+                currentPage: 1,
+                filters: {
+                    searchKey: '',
+                    categoryId: '',
+                    newsStatus: '',
+                    pageSize: CONFIG.DEFAULT_PAGE_SIZE,
+                    sortBy: 'newsArticleId',
+                    sortOrder: 'desc'
+                },
+                deleteId: null,
+                duplicateId: null,
+                editId: null,
+                categories: [],
+                tags: []
+            },
+
+            async init() {
+                await this.loadCategories();
+                await this.loadNews();
+                this.bindEvents();
+            },
+
+            bindEvents() {
+                $('#searchBtn').click(() => this.search());
+                $('#resetBtn').click(() => this.reset());
+                $('#pageSize').change(() => this.changePageSize());
+                $('#searchKey').keypress((e) => e.which === 13 && this.search());
+
+                $('#cancelDelete').click(() => this.closeDeleteModal());
+                $('#confirmDelete').click(() => this.confirmDelete());
+                $('#cancelDuplicate').click(() => this.closeDuplicateModal());
+                $('#confirmDuplicate').click(() => this.confirmDuplicate());
+                $('#tagGenBtn').click(() => this.generateTags());
+                $('#editTagGenBtn').click(() => this.generateTagsForEdit());
+
+                $('.modal-container').click((e) => {
+                    if (e.target.classList.contains('modal-container')) {
+                        $(e.target).addClass('hidden');
+                    }
+                });
+            },
+
+            search() {
+                this.state.currentPage = 1;
+                this.updateFilters();
+                this.loadNews();
+            },
+
+            reset() {
+                $('#searchKey, #categoryId, #newsStatus').val('');
+                $('#pageSize').val(CONFIG.DEFAULT_PAGE_SIZE);
+                this.state.currentPage = 1;
+                this.updateFilters();
+                this.loadNews();
+            },
+
+            changePageSize() {
+                this.state.currentPage = 1;
+                this.updateFilters();
+                this.loadNews();
+            },
+
+            updateFilters() {
+                this.state.filters = {
+                    searchKey: $('#searchKey').val().trim(),
+                    categoryId: $('#categoryId').val(),
+                    newsStatus: $('#newsStatus').val(),
+                    pageSize: parseInt($('#pageSize').val()),
+                    sortBy: this.state.filters.sortBy,
+                    sortOrder: this.state.filters.sortOrder
+                };
+            },
+
+            async loadCategories() {
+                try {
+                    const response = await ApiService.get('/Category');
+                    if (response.data && Array.isArray(response.data)) {
+                        this.state.categories = response.data;
+                        this.renderCategories('#categoryId', false);
+                    }
+                } catch (error) {
+                    console.error('Failed to load categories:', error);
+                }
+            },
+
+            renderCategories(selector, activeOnly = true) {
+                const $select = $(selector);
+                $select.find('option:not(:first)').remove();
+
+                this.state.categories.forEach(category => {
+                    if (!activeOnly || category.isActive) {
+                        $select.append(`<option value="${category.categoryId}">${category.categoryName}</option>`);
+                    }
+
+                    if (category.childCategory && category.childCategory.length > 0) {
+                        category.childCategory.forEach(child => {
+                            if (!activeOnly || child.isActive) {
+                                $select.append(`<option value="${child.categoryId}">── ${child.categoryName}</option>`);
+                            }
+                        });
+                    }
+                });
+            },
+
+            async loadNews() {
+                const params = {
+                    Page: this.state.currentPage,
+                    PageSize: this.state.filters.pageSize,
+                    SortBy: this.state.filters.sortBy,
+                    SortOrder: this.state.filters.sortOrder,
+                    ...(this.state.filters.searchKey && { SearchKey: this.state.filters.searchKey }),
+                    ...(this.state.filters.categoryId && { CategoryId: this.state.filters.categoryId }),
+                    ...(this.state.filters.newsStatus !== '' && { NewsStatus: this.state.filters.newsStatus })
+                };
+
+                Utils.showElement('#loading');
+                Utils.hideElement('#newsTable, #emptyState, #error');
+
+                try {
+                    const response = await ApiService.get(`/news/manage?${$.param(params)}`);
+                    Utils.hideElement('#loading');
+
+                    if (response.data && response.data.items && response.data.items.length > 0) {
+                        this.renderTable(response.data.items);
+                        this.renderPagination(response.data);
+                        this.updatePaginationInfo(response.data);
+                        Utils.showElement('#newsTable');
+                    } else {
+                        Utils.showElement('#emptyState');
+                    }
+                } catch (error) {
+                    Utils.hideElement('#loading');
+                    const message = error.status === 403
+                        ? 'You do not have permission to see this page'
+                        : `Failed to load news: ${error.responseJSON?.message || error.statusText}`;
+                    this.showError(message);
+                }
+            },
+
+            renderTable(items) {
+                const tbody = $('#newsTableBody');
+                tbody.empty();
+
+                items.forEach((item, index) => {
+                    const statusBadge = item.newsStatus
+                        ? '<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Published</span>'
+                        : '<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">Inactive</span>';
+
+                    const row = `
+                        <tr class="hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
+                            <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.newsArticleId}</td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm font-semibold text-gray-900 max-w-md truncate">${item.newsTitle}</div>
+                                <div class="text-xs text-gray-500 mt-1">${item.headline}</div>
+                            </td>
+                            <td class="">
+                                <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-2xl text-xs font-semibold">${item.categoryName}</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-700">${item.createdByName}</td>
+                            <td class="px-6 py-4">${statusBadge}</td>
+                            <td class="px-6 py-4 text-sm text-gray-700">${Utils.formatDate(item.createdDate)}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    <button onclick="newsManager.showEditModal('${item.newsArticleId}')" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="newsManager.showDeleteModal('${item.newsArticleId}')" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <button onclick="newsManager.showDuplicateModal('${item.newsArticleId}')" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
+                                        <i class="fa-solid fa-clone"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.append(row);
+                });
+            },
+
+            renderPagination(data) {
+                const $pagination = $('#pagination');
+                $pagination.empty();
+
+                const { page: currentPage, totalPages, hasPrevious, hasNext } = data;
+
+                $pagination.append(`
+                    <button onclick="newsManager.goToPage(${currentPage - 1})"
+                            class="px-4 py-2 rounded-lg font-semibold transition-colors ${!hasPrevious ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-purple-600 text-white hover:bg-purple-700'}"
+                            ${!hasPrevious ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                `);
+
+                const startPage = Math.max(1, currentPage - 2);
+                const endPage = Math.min(totalPages, currentPage + 2);
+
+                if (startPage > 1) {
+                    $pagination.append(`<button onclick="newsManager.goToPage(1)" class="px-4 py-2 rounded-lg font-semibold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">1</button>`);
+                    if (startPage > 2) {
+                        $pagination.append(`<span class="px-2 py-2 text-gray-500">...</span>`);
+                    }
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const isActive = i === currentPage;
+                    $pagination.append(`
+                        <button onclick="newsManager.goToPage(${i})"
+                                class="px-4 py-2 rounded-lg font-semibold transition-colors ${isActive ? 'bg-purple-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'}">
+                            ${i}
+                        </button>
+                    `);
+                }
+
+                if (endPage < totalPages) {
+                    if (endPage < totalPages - 1) {
+                        $pagination.append(`<span class="px-2 py-2 text-gray-500">...</span>`);
+                    }
+                    $pagination.append(`<button onclick="newsManager.goToPage(${totalPages})" class="px-4 py-2 rounded-lg font-semibold bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">${totalPages}</button>`);
+                }
+
+                $pagination.append(`
+                    <button onclick="newsManager.goToPage(${currentPage + 1})"
+                            class="px-4 py-2 rounded-lg font-semibold transition-colors ${!hasNext ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-purple-600 text-white hover:bg-purple-700'}"
+                            ${!hasNext ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                `);
+            },
+
+            updatePaginationInfo(data) {
+                const from = (data.page - 1) * data.pageSize + 1;
+                const to = Math.min(data.page * data.pageSize, data.totalItems);
+                $('#showingFrom').text(from);
+                $('#showingTo').text(to);
+                $('#totalItems').text(data.totalItems);
+            },
+
+            goToPage(page) {
+                this.state.currentPage = page;
+                this.loadNews();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            },
+
+            showError(message) {
+                $('#errorMessage').text(message);
+                Utils.showElement('#error');
+            },
+
+            async showAddModal() {
+                Utils.showElement('#addNewsModal');
+                this.renderCategories('#addCategoryId', true);
+                await this.loadTagsForModal('#addTagsList', 'addTags');
+            },
+
+            closeAddModal() {
+                Utils.hideElement('#addNewsModal');
+                $('#addNewsForm')[0].reset();
+                $('input[name="addTags"], input[name="suggestedTags"]').prop('checked', false);
+                $('#tagSuggestionList').empty();
+                Utils.hideElement('#addSuccessMessage, #addErrorMessage');
+            },
+
+            async loadTagsForModal(containerSelector, inputName) {
+                try {
+                    const response = await ApiService.get('/tag');
+                    if (response.data && Array.isArray(response.data)) {
+                        this.state.tags = response.data;
+                        this.renderTags(containerSelector, inputName, response.data);
+                    }
+                } catch (error) {
+                    console.error('Failed to load tags:', error);
+                }
+            },
+
+            renderTags(containerSelector, inputName, tags) {
+                const $container = $(containerSelector);
+                $container.empty();
+
+                tags.forEach(tag => {
+                    const tagHtml = `
+                        <label class="flex items-center gap-2 p-3 border border-gray-300 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors cursor-pointer">
+                            <input type="checkbox" name="${inputName}" value="${tag.tagId}" class="w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500">
+                            <span class="text-sm font-medium text-gray-700">${tag.tagName}</span>
+                        </label>
+                    `;
+                    $container.append(tagHtml);
+                });
+            },
+
+            async generateTags() {
+                const content = $('#addNewsContent').val().trim();
+                if (!content) {
+                    alert('Please fill in content before generating tags!');
+                    return;
+                }
+
+                try {
+                    const token = await ensureValidAccessToken();
+                    const response = await $.ajax({
+                        url: `${CONFIG.AI_API_BASE}/ai/suggest-tags`,
+                        type: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify({ content })
+                    });
+
+                    if (response.tags && response.tags.length > 0) {
+                        this.renderSuggestedTags(response.tags);
+                    }
+                } catch (error) {
+                    console.error('Failed to generate tags:', error);
+                    alert(error.responseJSON?.message || 'Failed to generate tags');
+                }
+            },
+
+            async generateTagsForEdit() {
+                const content = $('#editNewsContent').val().trim();
+                if (!content) {
+                    alert('Please fill in content before generating tags!');
+                    return;
+                }
+
+                try {
+                    const token = await ensureValidAccessToken();
+                    const response = await $.ajax({
+                        url: `${CONFIG.AI_API_BASE}/ai/suggest-tags`,
+                        type: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify({ content })
+                    });
+
+                    if (response.tags && response.tags.length > 0) {
+                        this.renderSuggestedTagsForEdit(response.tags);
+                    }
+                } catch (error) {
+                    console.error('Failed to generate tags:', error);
+                    alert(error.responseJSON?.message || 'Failed to generate tags');
+                }
+            },
+
+            renderSuggestedTagsForEdit(tags) {
+                const $container = $('#editTagSuggestionList');
+                $container.empty();
+
+                tags.forEach(tag => {
+                    const tagHtml = `
+                        <label class="flex items-center gap-2 p-3 border border-green-300 bg-green-50 rounded-lg hover:bg-green-100 hover:border-green-400 transition-colors cursor-pointer">
+                            <input type="checkbox" name="editSuggestedTags" data-tag-name="${tag}" class="w-4 h-4 text-green-600 rounded focus:ring-2 focus:ring-green-500">
+                            <span class="text-sm font-medium text-gray-700">${tag}</span>
+                            <span class="text-xs text-green-600 ml-auto">New</span>
+                        </label>
+                    `;
+                    $container.append(tagHtml);
+                });
+            },
+
+            renderSuggestedTags(tags) {
+                const $container = $('#tagSuggestionList');
+                $container.empty();
+
+                tags.forEach(tag => {
+                    const tagHtml = `
+                        <label class="flex items-center gap-2 p-3 border border-green-300 bg-green-50 rounded-lg hover:bg-green-100 hover:border-green-400 transition-colors cursor-pointer">
+                            <input type="checkbox" name="suggestedTags" data-tag-name="${tag}" class="w-4 h-4 text-green-600 rounded focus:ring-2 focus:ring-green-500">
+                            <span class="text-sm font-medium text-gray-700">${tag}</span>
+                            <span class="text-xs text-green-600 ml-auto">New</span>
+                        </label>
+                    `;
+                    $container.append(tagHtml);
+                });
+            },
+
+            async createNews() {
+                const userId = parseInt(localStorage.getItem('userId')) || 0;
+                const existingTags = Utils.getSelectedCheckboxValues('addTags');
+                const newTags = [];
+
+                $('input[name="suggestedTags"]:checked').each(function() {
+                    newTags.push($(this).data('tag-name'));
+                });
+
+                const newsData = {
+                    newsTitle: $('#addNewsTitle').val().trim(),
+                    headline: $('#addHeadline').val().trim(),
+                    createdDate: new Date().toISOString(),
+                    newsContent: $('#addNewsContent').val().trim(),
+                    newsSource: $('#addNewsSource').val().trim(),
+                    categoryId: parseInt($('#addCategoryId').val()),
+                    newsStatus: $('#addNewsStatus').val() === 'true',
+                    createdById: userId,
+                    tagIdList: existingTags
+                };
+
+                if (!newsData.newsTitle || !newsData.headline || !newsData.newsContent || !newsData.categoryId) {
+                    this.showAddError('Please fill in all required fields.');
+                    return;
+                }
+
+                Utils.setButtonLoading('#submitAddBtn', true, 'Creating...', '');
+
+                try {
+                    if (newTags.length > 0) {
+                        const createdTagIds = await this.createNewTags(newTags);
+                        newsData.tagIdList = [...existingTags, ...createdTagIds];
+                    }
+
+                    await ApiService.post('/news/create', newsData);
+                    this.showAddSuccess();
+                    setTimeout(() => {
+                        this.closeAddModal();
+                        this.loadNews();
+                    }, CONFIG.SUCCESS_DELAY);
+                } catch (error) {
+                    this.showAddError(error.responseJSON?.message || 'Failed to create news article');
+                } finally {
+                    Utils.setButtonLoading('#submitAddBtn', false, '', '<i class="fas fa-save"></i><span>Create News Article</span>');
+                }
+            },
+
+            async createNewTags(tagNames) {
+                const createdIds = [];
+                for (const tagName of tagNames) {
+                    try {
+                        const result = await ApiService.post('/tag', {
+                            tagName,
+                            note: 'Auto-generated from AI suggestion'
+                        });
+                        if (result.statusCode === 200 && result.data) {
+                            createdIds.push(result.data);
+                        }
+                    } catch (error) {
+                        if (error.status === 400 && error.responseJSON?.message?.includes('exist')) {
+                            const existingTag = this.state.tags.find(t =>
+                                t.tagName.toLowerCase() === tagName.toLowerCase()
+                            );
+                            if (existingTag) {
+                                createdIds.push(existingTag.tagId);
+                                console.log(`Tag "${tagName}" already exists, using existing ID:`, existingTag.tagId);
+                            }
+                        } else {
+                            console.error('Failed to create tag:', tagName, error);
+                        }
+                    }
+                }
+                return createdIds;
+            },
+
+            showAddSuccess() {
+                Utils.showElement('#addSuccessMessage');
+                Utils.hideElement('#addErrorMessage');
+                Utils.scrollToTop('#addNewsModal .p-8');
+            },
+
+            showAddError(message) {
+                $('#addErrorText').text(message);
+                Utils.showElement('#addErrorMessage');
+                Utils.hideElement('#addSuccessMessage');
+                Utils.scrollToTop('#addNewsModal .p-8');
+            },
+
+            async showEditModal(newsId) {
+                this.state.editId = newsId;
+                Utils.showElement('#editNewsModal, #editLoading');
+                Utils.hideElement('#editNewsForm, #editActionButtons, #editSuccessMessage, #editErrorMessage');
+
+                this.renderCategories('#editCategoryId', true);
+                await this.loadTagsForModal('#editTagsList', 'editTags');
+                await this.loadNewsForEdit(newsId);
+            },
+
+            closeEditModal() {
+                Utils.hideElement('#editNewsModal');
+                $('#editNewsForm')[0].reset();
+                $('input[name="editTags"]').prop('checked', false);
+                $('#editTagSuggestionList').empty();
+                Utils.hideElement('#editSuccessMessage, #editErrorMessage');
+                this.state.editId = null;
+            },
+
+            async loadNewsForEdit(newsId) {
+                try {
+                    const response = await ApiService.get(`/news/detail/${newsId}`);
+                    Utils.hideElement('#editLoading');
+
+                    if (response.data) {
+                        const news = response.data;
+                        $('#editNewsArticleId').val(news.newsArticleId);
+                        $('#editNewsTitle').val(news.newsTitle);
+                        $('#editHeadline').val(news.headline);
+                        $('#editNewsContent').val(news.newsContent);
+                        $('#editNewsSource').val(news.newsSource || '');
+                        $('#editCategoryId').val(news.categoryId);
+                        $('#editNewsStatus').val(news.newsStatus.toString());
+
+                        if (news.tags && news.tags.length > 0) {
+                            news.tags.forEach(tag => {
+                                $(`input[name="editTags"][value="${tag.tagId}"]`).prop('checked', true);
+                            });
+                        }
+
+                        Utils.showElement('#editNewsForm, #editActionButtons');
+                    }
+                } catch (error) {
+                    Utils.hideElement('#editLoading');
+                    this.showEditError(error.responseJSON?.message || 'Failed to load news article');
+                }
+            },
+
+            async updateNews() {
+                const existingTags = Utils.getSelectedCheckboxValues('editTags');
+                const newTags = [];
+
+                $('input[name="editSuggestedTags"]:checked').each(function() {
+                    newTags.push($(this).data('tag-name'));
+                });
+
+                const newsData = {
+                    newsArticleId: "" + this.state.editId,
+                    newsTitle: $('#editNewsTitle').val().trim(),
+                    headline: $('#editHeadline').val().trim(),
+                    createdDate: new Date().toISOString(),
+                    newsContent: $('#editNewsContent').val().trim(),
+                    newsSource: $('#editNewsSource').val().trim(),
+                    categoryId: parseInt($('#editCategoryId').val()),
+                    newsStatus: $('#editNewsStatus').val() === 'true',
+                    tagIdList: existingTags
+                };
+
+                if (!newsData.newsTitle || !newsData.headline || !newsData.newsContent || !newsData.categoryId) {
+                    this.showEditError('Please fill in all required fields.');
+                    return;
+                }
+
+                Utils.setButtonLoading('#submitEditBtn', true, 'Updating...', '');
+
+                try {
+                    // Tạo new tags nếu có
+                    if (newTags.length > 0) {
+                        const createdTagIds = await this.createNewTags(newTags);
+                        newsData.tagIdList = [...existingTags, ...createdTagIds];
+                    }
+
+                    await ApiService.put('/news', newsData);
+                    this.showEditSuccess();
+                    setTimeout(() => {
+                        this.closeEditModal();
+                        this.loadNews();
+                    }, CONFIG.SUCCESS_DELAY);
+                } catch (error) {
+                    this.showEditError(error.responseJSON?.message || 'Failed to update news article');
+                } finally {
+                    Utils.setButtonLoading('#submitEditBtn', false, '', '<i class="fas fa-save"></i><span>Update News Article</span>');
+                }
+            },
+
+            showEditSuccess() {
+                Utils.showElement('#editSuccessMessage');
+                Utils.hideElement('#editErrorMessage');
+                Utils.scrollToTop('#editNewsModal .p-8');
+            },
+
+            showEditError(message) {
+                $('#editErrorText').text(message);
+                Utils.showElement('#editErrorMessage');
+                Utils.hideElement('#editSuccessMessage');
+                Utils.scrollToTop('#editNewsModal .p-8');
+            },
+
+            showDeleteModal(newsId) {
+                this.state.deleteId = newsId;
+                Utils.showElement('#deleteModal');
+            },
+
+            closeDeleteModal() {
+                Utils.hideElement('#deleteModal');
+                this.state.deleteId = null;
+            },
+
+            async confirmDelete() {
+                if (!this.state.deleteId) return;
+
+                try {
+                    await ApiService.delete(`/news/${this.state.deleteId}`);
+                    this.closeDeleteModal();
+                    this.loadNews();
+                } catch (error) {
+                    alert(error.responseJSON?.message || 'Failed to delete news');
+                    this.closeDeleteModal();
+                }
+            },
+
+            showDuplicateModal(newsId) {
+                this.state.duplicateId = newsId;
+                Utils.showElement('#duplicateModal');
+            },
+
+            closeDuplicateModal() {
+                Utils.hideElement('#duplicateModal');
+                this.state.duplicateId = null;
+            },
+
+            async confirmDuplicate() {
+                if (!this.state.duplicateId) return;
+
+                try {
+                    await ApiService.post(`/news/duplicate/${this.state.duplicateId}`, {});
+                    this.closeDuplicateModal();
+                    this.loadNews();
+                } catch (error) {
+                    alert(error.responseJSON?.message || 'Failed to duplicate news');
+                    this.closeDuplicateModal();
+                }
+            }
+        };
+
+        $(document).ready(() => {
+            newsManager.init();
+        });
+    </script>
+}

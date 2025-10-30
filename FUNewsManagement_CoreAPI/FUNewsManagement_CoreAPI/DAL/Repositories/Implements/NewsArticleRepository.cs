@@ -134,5 +134,16 @@ namespace FUNMS.DAL.Repositories.Implements
         {
             _context.NewsArticles.Remove(news);
         }
+
+        public async Task IncreaseNewsView(string id)
+        {
+            var news = await _context.NewsArticles.FirstOrDefaultAsync(n => n.NewsArticleId.Equals(id));
+
+            if (news != null)
+            {
+                news.View++;
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

@@ -50,7 +50,7 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
             };
         }
 
-        public async Task AddAsync(TagAddDTO dto)
+        public async Task<int> AddAsync(TagAddDTO dto)
         {
             var all = await _repo.GetAllAsync();
 
@@ -79,6 +79,8 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Implements
                 newTag,
                 ""
             );
+
+            return maxId + 1;
         }
 
         public async Task UpdateAsync(TagEditDTO dto)

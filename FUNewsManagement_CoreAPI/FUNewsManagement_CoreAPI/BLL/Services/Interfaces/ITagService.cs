@@ -6,7 +6,7 @@ namespace FUNewsManagement_CoreAPI.BLL.Services.Interfaces
     {
         Task<IEnumerable<TagViewDTO>> GetAllAsync(string? searchKey);
         Task<TagViewDTO?> GetByIdAsync(int id);
-        Task AddAsync(TagAddDTO dto);
+        Task<int> AddAsync(TagAddDTO dto);
         Task UpdateAsync(TagEditDTO dto);
         Task DeleteAsync(int id);
     }

@@ -1,0 +1,616 @@
+﻿@page
+@model DoHoangAnh_SE1842NET_A01_FE.Pages.ProfileModel
+@{
+}
+
+<div class="w-screen mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+        <div class="flex justify-between items-center">
+            <h1 class="text-4xl font-bold text-gray-800">
+                <i class="fas fa-user-circle text-blue-600 mr-3"></i>My Profile
+            </h1>
+            <button id="changePasswordBtn" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center gap-2">
+                <i class="fas fa-key"></i>
+                <span>Change Password</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="bg-white rounded-2xl shadow-xl p-12 text-center">
+        <i class="fas fa-spinner fa-spin text-5xl text-blue-600 mb-4"></i>
+        <p class="text-gray-600 text-lg">Loading profile...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="hidden bg-red-50 border-2 border-red-200 rounded-2xl shadow-xl p-8 text-center">
+        <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-4"></i>
+        <p class="text-red-700 text-lg font-semibold mb-2">Error</p>
+        <p id="errorMessage" class="text-red-600"></p>
+    </div>
+
+    <!-- Profile Content -->
+    <div id="profileContent" class="hidden">
+        <!-- Profile Card -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Profile Header with Gradient -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-12 relative">
+                <div class="flex items-center gap-6">
+                    <div class="w-28 h-28 bg-white rounded-full flex items-center justify-center text-5xl font-bold text-blue-600 shadow-xl ring-4 ring-white ring-opacity-50">
+                        <span id="userInitial">U</span>
+                    </div>
+                    <div class="text-white flex-1">
+                        <h2 id="userName" class="text-3xl font-bold mb-2">Loading...</h2>
+                        <p id="userEmail" class="text-blue-100 text-lg mb-3">Loading...</p>
+                        <div id="roleDisplay" class="inline-block">
+                            <!-- Role badge will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Form Section -->
+            <div class="p-8">
+                <!-- Success Message -->
+                <div id="successMessage" class="hidden bg-green-50 border-l-4 border-green-500 rounded-lg p-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                        <div>
+                            <p class="text-green-800 font-semibold">Success!</p>
+                            <p class="text-green-700 text-sm">Profile updated successfully.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorMessageForm" class="hidden bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-exclamation-circle text-2xl text-red-600"></i>
+                        <div>
+                            <p class="text-red-800 font-semibold">Error!</p>
+                            <p id="errorTextForm" class="text-red-700 text-sm"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="profileForm" class="space-y-6">
+                    <input type="hidden" id="accountId" value="">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Account ID (Read-only) -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-id-badge text-blue-600 mr-2"></i>Account ID
+                            </label>
+                            <input type="text" id="displayAccountId" disabled
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed font-medium">
+                        </div>
+
+                        <!-- Email (Read-only) -->
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-envelope text-blue-600 mr-2"></i>Email Address
+                            </label>
+                            <input type="email" id="accountEmail" disabled
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 text-gray-600 cursor-not-allowed">
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-user text-blue-600 mr-2"></i>Full Name <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="accountName" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                               placeholder="Enter your full name">
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-4 pt-4">
+                        <button type="submit" id="updateBtn"
+                                class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
+                            <i class="fas fa-save"></i>
+                            <span>Update Profile</span>
+                        </button>
+                        <button type="button" id="cancelBtn"
+                                class="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2">
+                            <i class="fas fa-undo mr-2"></i>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div id="passwordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full my-8 transform transition-all">
+        <div class="p-8">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">
+                    <i class="fas fa-key text-blue-600 mr-2"></i>Change Password
+                </h2>
+                <button id="closePasswordModal" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Success Message -->
+            <div id="passwordSuccessMessage" class="hidden bg-green-50 border-l-4 border-green-500 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                    <div>
+                        <p class="text-green-800 font-semibold">Success!</p>
+                        <p class="text-green-700 text-sm">Password changed successfully.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="passwordErrorMessage" class="hidden bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-2xl text-red-600"></i>
+                    <div>
+                        <p class="text-red-800 font-semibold">Error!</p>
+                        <p id="passwordErrorText" class="text-red-700 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Form -->
+            <form id="passwordForm" class="space-y-5">
+                <!-- Current Password -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Current Password <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="currentPassword" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 transition-all"
+                               placeholder="Enter current password">
+                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 toggle-password" data-target="currentPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- New Password -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        New Password <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="newPassword" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 transition-all"
+                               placeholder="Enter new password">
+                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 toggle-password" data-target="newPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirm New Password -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Confirm New Password <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="confirmPassword" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12 transition-all"
+                               placeholder="Confirm new password">
+                        <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 toggle-password" data-target="confirmPassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Password Requirements -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p class="text-sm font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                        <i class="fas fa-shield-alt"></i>
+                        Password Requirements:
+                    </p>
+                    <ul class="text-sm text-blue-800 space-y-2">
+                        <li id="req-length" class="flex items-center gap-2">
+                            <i class="fas fa-circle text-xs"></i>
+                            <span>At least 8 characters</span>
+                        </li>
+                        <li id="req-uppercase" class="flex items-center gap-2">
+                            <i class="fas fa-circle text-xs"></i>
+                            <span>One uppercase letter</span>
+                        </li>
+                        <li id="req-lowercase" class="flex items-center gap-2">
+                            <i class="fas fa-circle text-xs"></i>
+                            <span>One lowercase letter</span>
+                        </li>
+                        <li id="req-number" class="flex items-center gap-2">
+                            <i class="fas fa-circle text-xs"></i>
+                            <span>One number</span>
+                        </li>
+                        <li id="req-special" class="flex items-center gap-2">
+                            <i class="fas fa-circle text-xs"></i>
+                            <span>One special character (!@@#$%^&*)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" id="submitPasswordBtn"
+                            class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fas fa-check"></i>
+                        <span>Change Password</span>
+                    </button>
+                    <button type="button" id="cancelPasswordBtn"
+                            class="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="hidden fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all">
+    <p id="toastMessage" class="text-white font-medium"></p>
+</div>
+
+<script>
+    const API_BASE = 'https://localhost:7000/api/account';
+    let originalData = {};
+
+    $(document).ready(async function() {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        loadProfile();
+
+        // Change password button
+        $('#changePasswordBtn').click(function() {
+            resetPasswordForm();
+            $('#passwordModal').removeClass('hidden');
+        });
+
+        // Close password modal
+        $('#closePasswordModal, #cancelPasswordBtn').click(function() {
+            $('#passwordModal').addClass('hidden');
+        });
+
+        // Toggle password visibility
+        $('.toggle-password').click(function() {
+            const target = $(this).data('target');
+            const input = $('#' + target);
+            const icon = $(this).find('i');
+
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+        // Password validation on input
+        $('#newPassword').on('input', function() {
+            validatePassword($(this).val());
+        });
+
+        // Profile form submit
+        $('#profileForm').submit(function(e) {
+            e.preventDefault();
+            updateProfile();
+        });
+
+        // Cancel button - reset form
+        $('#cancelBtn').click(function() {
+            resetProfileForm();
+        });
+
+        // Password form submit
+        $('#passwordForm').submit(function(e) {
+            e.preventDefault();
+            changePassword();
+        });
+
+        // Close modal when clicking outside
+        $('#passwordModal').click(function(e) {
+            if (e.target.id === 'passwordModal') {
+                $(this).addClass('hidden');
+            }
+        });
+    });
+
+    async function loadProfile() {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        // Get user ID from token or session storage
+        const userId = getUserIdFromToken();
+        if (!userId) {
+            showError('Unable to get user information');
+            return;
+        }
+
+        $('#loading').show();
+        $('#profileContent').addClass('hidden');
+        $('#error').addClass('hidden');
+
+        $.ajax({
+            url: `${API_BASE}/${userId}`,
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(account) {
+                $('#loading').hide();
+                displayProfile(account);
+                $('#profileContent').removeClass('hidden');
+            },
+            error: function(xhr) {
+                $('#loading').hide();
+                showError('Error loading profile: ' + (xhr.responseJSON?.message || 'Unknown error'));
+            }
+        });
+    }
+
+    function displayProfile(account) {
+        originalData = {
+            accountId: account.accountId,
+            accountName: account.accountName,
+            accountEmail: account.accountEmail,
+            accountRole: account.accountRole
+        };
+
+        // Set user initial
+        const initial = account.accountName ? account.accountName.charAt(0).toUpperCase() : 'U';
+        $('#userInitial').text(initial);
+
+        // Set header info
+        $('#userName').text(account.accountName);
+        $('#userEmail').text(account.accountEmail);
+
+        // Set form values
+        $('#accountId').val(account.accountId);
+        $('#displayAccountId').val(account.accountId);
+        $('#accountName').val(account.accountName);
+        $('#accountEmail').val(account.accountEmail);
+
+        // Set role badge
+        const roleText = account.accountRole === 1 ? 'Staff' : 'Lecturer';
+        const roleClass = account.accountRole === 1 
+            ? 'bg-white bg-opacity-20 text-white border border-white border-opacity-30' 
+            : 'bg-white bg-opacity-20 text-white border border-white border-opacity-30';
+        $('#roleDisplay').html(`<span class="${roleClass} px-4 py-2 rounded-lg font-semibold">${roleText}</span>`);
+    }
+
+    async function updateProfile() {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        const id = $('#accountId').val();
+        const data = {
+            accountName: $('#accountName').val(),
+            accountRole: originalData.accountRole
+        };
+
+        $('#updateBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Updating...');
+
+        $.ajax({
+            url: `${API_BASE}/${id}`,
+            method: 'PUT',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            data: JSON.stringify(data),
+            success: function(response) {
+                showSuccessMessage();
+                originalData.accountName = data.accountName;
+                $('#userName').text(data.accountName);
+                $('#userInitial').text(data.accountName.charAt(0).toUpperCase());
+                showToast('Profile updated successfully', 'success');
+                $('#updateBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Update Profile</span>');
+            },
+            error: function(xhr) {
+                showFormError(xhr.responseJSON?.message || 'Error updating profile');
+                $('#updateBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Update Profile</span>');
+            }
+        });
+    }
+
+    async function changePassword() {
+        const currentPassword = $('#currentPassword').val();
+        const newPassword = $('#newPassword').val();
+        const confirmPassword = $('#confirmPassword').val();
+
+        // Validate passwords match
+        if (newPassword !== confirmPassword) {
+            showPasswordError('New password and confirm password do not match');
+            return;
+        }
+
+        // Validate password requirements
+        if (!isPasswordValid(newPassword)) {
+            showPasswordError('Password does not meet requirements');
+            return;
+        }
+
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        const userId = $('#accountId').val();
+        const formData = new FormData();
+        formData.append('curPass', currentPassword);
+        formData.append('newPass', newPassword);
+
+        $('#submitPasswordBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Changing...');
+
+        $.ajax({
+            url: `${API_BASE}/reset-password/${userId}`,
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                showPasswordSuccess();
+                setTimeout(function() {
+                    $('#passwordModal').addClass('hidden');
+                    resetPasswordForm();
+                    showToast('Password changed successfully', 'success');
+                    $('#submitPasswordBtn').prop('disabled', false).html('<i class="fas fa-check"></i><span>Change Password</span>');
+                }, 1500);
+            },
+            error: function(xhr) {
+                showPasswordError(xhr.responseJSON?.message || 'Error changing password');
+                $('#submitPasswordBtn').prop('disabled', false).html('<i class="fas fa-check"></i><span>Change Password</span>');
+            }
+        });
+    }
+
+    function validatePassword(password) {
+        const requirements = {
+            length: password.length >= 8,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[!@@#$%^&*(),.?":{}|<>]/.test(password)
+        };
+
+        // Update requirement indicators
+        $('#req-length i').removeClass('fa-circle fa-check-circle text-xs text-green-600').addClass(
+            requirements.length ? 'fa-check-circle text-green-600' : 'fa-circle text-xs'
+        );
+        $('#req-uppercase i').removeClass('fa-circle fa-check-circle text-xs text-green-600').addClass(
+            requirements.uppercase ? 'fa-check-circle text-green-600' : 'fa-circle text-xs'
+        );
+        $('#req-lowercase i').removeClass('fa-circle fa-check-circle text-xs text-green-600').addClass(
+            requirements.lowercase ? 'fa-check-circle text-green-600' : 'fa-circle text-xs'
+        );
+        $('#req-number i').removeClass('fa-circle fa-check-circle text-xs text-green-600').addClass(
+            requirements.number ? 'fa-check-circle text-green-600' : 'fa-circle text-xs'
+        );
+        $('#req-special i').removeClass('fa-circle fa-check-circle text-xs text-green-600').addClass(
+            requirements.special ? 'fa-check-circle text-green-600' : 'fa-circle text-xs'
+        );
+
+        return Object.values(requirements).every(req => req);
+    }
+
+    function isPasswordValid(password) {
+        return password.length >= 8 &&
+               /[A-Z]/.test(password) &&
+               /[a-z]/.test(password) &&
+               /[0-9]/.test(password) &&
+               /[!@@#$%^&*(),.?":{}|<>]/.test(password);
+    }
+
+    function getUserIdFromToken() {
+        // Try to get from localStorage first
+        const userId = localStorage.getItem('userId');
+        if (userId) return userId;
+
+        // If not in localStorage, try to decode from token
+        const token = localStorage.getItem('accessToken');
+        if (!token) return null;
+
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.nameid || payload.sub || payload.userId;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function resetProfileForm() {
+        $('#accountName').val(originalData.accountName);
+        $('#successMessage').addClass('hidden');
+        $('#errorMessageForm').addClass('hidden');
+    }
+
+    function resetPasswordForm() {
+        $('#passwordForm')[0].reset();
+        $('#passwordSuccessMessage').addClass('hidden');
+        $('#passwordErrorMessage').addClass('hidden');
+        // Reset password requirement indicators
+        $('#req-length i, #req-uppercase i, #req-lowercase i, #req-number i, #req-special i')
+            .removeClass('fa-check-circle text-green-600').addClass('fa-circle text-xs');
+    }
+
+    function showSuccessMessage() {
+        $('#successMessage').removeClass('hidden');
+        $('#errorMessageForm').addClass('hidden');
+        setTimeout(() => {
+            $('#successMessage').addClass('hidden');
+        }, 3000);
+    }
+
+    function showFormError(message) {
+        $('#errorTextForm').text(message);
+        $('#errorMessageForm').removeClass('hidden');
+        $('#successMessage').addClass('hidden');
+        setTimeout(() => {
+            $('#errorMessageForm').addClass('hidden');
+        }, 5000);
+    }
+
+    function showPasswordSuccess() {
+        $('#passwordSuccessMessage').removeClass('hidden');
+        $('#passwordErrorMessage').addClass('hidden');
+    }
+
+    function showPasswordError(message) {
+        $('#passwordErrorText').text(message);
+        $('#passwordErrorMessage').removeClass('hidden');
+        $('#passwordSuccessMessage').addClass('hidden');
+        $('#passwordModal .p-8').scrollTop(0);
+    }
+
+    function showError(message) {
+        $('#errorMessage').text(message);
+        $('#error').removeClass('hidden');
+    }
+
+    function showToast(message, type) {
+        const toast = $('#toast');
+        const toastMessage = $('#toastMessage');
+
+        toast.removeClass('bg-green-500 bg-red-500 bg-blue-500');
+
+        if (type === 'success') {
+            toast.addClass('bg-green-500');
+        } else if (type === 'error') {
+            toast.addClass('bg-red-500');
+        } else {
+            toast.addClass('bg-blue-500');
+        }
+
+        toastMessage.text(message);
+        toast.removeClass('hidden');
+
+        setTimeout(() => {
+            toast.addClass('hidden');
+        }, 3000);
+    }
+</script>

@@ -5,6 +5,7 @@ using FUNewsManagement_CoreAPI.DAL.Data;
 using FUNewsManagement_CoreAPI.DAL.Entities;
 using FUNewsManagement_CoreAPI.DAL.Repositories.Implements;
 using FUNewsManagement_CoreAPI.DAL.Repositories.Interfaces;
+using FUNewsManagement_CoreAPI.SignalRHub;
 using FUNFUNewsManagement_CoreAPIMS.DAL.Repositories.Interfaces;
 using FUNMS.DAL.Repositories.Implements;
 using FUNMS.DAL.Repositories.Interfaces;
@@ -34,7 +35,10 @@ builder.Host.UseSerilog();
 // Config
 var configuration = builder.Configuration;
 
-// Services.
+//SignalR Hub
+builder.Services.AddSignalR();
+
+// DBContext
 builder.Services.AddDbContext<FUNMSDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("SqlServer")));
 
 // Repo
@@ -50,6 +54,7 @@ builder.Services.AddTransient<AuthService>();
 builder.Services.AddTransient<INewsService, NewsService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<ITagService, TagService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
@@ -93,13 +98,14 @@ builder.Services.AddControllers().AddOData(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// CORS
+// CORS - UPDATED FOR SIGNALR
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        b => b.AllowAnyOrigin()
+        b => b.WithOrigins("https://localhost:7295") // Your Razor Pages URL
               .AllowAnyMethod()
-              .AllowAnyHeader());
+              .AllowAnyHeader()
+              .AllowCredentials()); // Required for SignalR
 });
 
 var app = builder.Build();
@@ -112,11 +118,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 
-app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<NotificationHub>("/notificationHub");
 app.MapControllers();
 
 app.Run();

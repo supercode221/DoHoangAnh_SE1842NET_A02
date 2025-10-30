@@ -1,10 +1,411 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "News";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <!-- Page Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-5xl font-bold text-black mb-4">Latest News</h1>
+        <p class="text-xl text-black/90">Stay updated with the latest articles and announcements</p>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="bg-white/80 backdrop-blur-lg border border-white/40 rounded-2xl p-6 mb-8 shadow-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-4">
+            <!-- Search -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Search</label>
+                <input type="text" id="searchKey" placeholder="Search news..."
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+            </div>
+
+            <!-- Category -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                <select id="categoryId"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+
+            <!-- Tag -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Tag</label>
+                <select id="tagName"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="">All Tags</option>
+                </select>
+            </div>
+
+            <!-- Created By ID -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Created By ID</label>
+                <input type="number" id="createdById" placeholder="User ID"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+            </div>
+
+            <!-- Created Date -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Created Date</label>
+                <input type="date" id="createdDate"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+            </div>
+
+            <!-- Sort By -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Sort By</label>
+                <select id="sortBy" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="">Default</option>
+                    <option value="newsArticleId">News Article Id</option>
+                    <option value="newsTitle">News Title</option>
+                    <option value="headline">Headline</option>
+                    <option value="newsContent">Content</option>
+                    <option value="newsSource">Source</option>
+                </select>
+            </div>
+
+            <!-- Sort Order -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Sort Order</label>
+                <select id="sortOrder"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                    <option value="">Default</option>
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex gap-3 mt-6">
+            <button onclick="applyFilters()"
+                    class="flex-1 bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition">
+                Apply Filters
+            </button>
+            <button onclick="clearFilters()"
+                    class="px-6 bg-gray-200 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">
+                Clear
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading" class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-white"></div>
+    </div>
+
+    <!-- Error Message -->
+    <div id="error" class="hidden bg-red-500/20 backdrop-blur-lg border border-red-500/50 rounded-lg p-6 text-black text-center">
+        <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="text-xl font-semibold mb-2">Failed to Load News</h3>
+        <p id="errorMessage" class="text-black/80"></p>
+    </div>
+
+    <!-- News Grid -->
+    <div id="newsGrid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- News cards will be inserted here -->
+    </div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="hidden mt-12 flex justify-center items-center space-x-4">
+        <button id="prevBtn" class="px-6 py-3 bg-white/10 backdrop-blur-lg border border-white/20 text-black rounded-lg hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+            Previous
+        </button>
+        <span id="pageInfo" class="text-black font-semibold"></span>
+        <button id="nextBtn" class="px-6 py-3 bg-white/10 backdrop-blur-lg border border-white/20 text-black rounded-lg hover:bg-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+            Next
+        </button>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        // API Configuration
+        const API_URL = 'https://localhost:7000/api/news';
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentFilters = {};
+
+        // Build query string from filters
+        function buildQueryString(page = 1) {
+            const params = new URLSearchParams();
+            params.append('page', page);
+            params.append('pageSize', 6);
+
+            if (currentFilters.searchKey) params.append('SearchKey', currentFilters.searchKey);
+            if (currentFilters.categoryId) params.append('CategoryId', currentFilters.categoryId);
+            if (currentFilters.tagName) params.append('TagName', currentFilters.tagName);
+            if (currentFilters.createdById) params.append('CreatedById', currentFilters.createdById);
+            if (currentFilters.createdDate) params.append('CreatedDate', currentFilters.createdDate);
+            if (currentFilters.sortBy) params.append('SortBy', currentFilters.sortBy);
+            if (currentFilters.sortOrder) params.append('SortOrder', currentFilters.sortOrder);
+
+            return params.toString();
+        }
+
+        // Apply filters
+        function applyFilters() {
+            currentFilters = {
+                searchKey: document.getElementById('searchKey').value.trim(),
+                categoryId: document.getElementById('categoryId').value.trim(),
+                tagName: document.getElementById('tagName').value.trim(),
+                createdById: document.getElementById('createdById').value.trim(),
+                createdDate: document.getElementById('createdDate').value,
+                sortBy: document.getElementById('sortBy').value.trim(),
+                sortOrder: document.getElementById('sortOrder').value
+            };
+            fetchNews(1);
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('searchKey').value = '';
+            document.getElementById('categoryId').value = '';
+            document.getElementById('tagName').value = '';
+            document.getElementById('createdById').value = '';
+            document.getElementById('createdDate').value = '';
+            document.getElementById('sortBy').value = '';
+            document.getElementById('sortOrder').value = '';
+            currentFilters = {};
+            fetchNews(1);
+        }
+
+        // Fetch news data
+        async function fetchNews(page = 1) {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const newsGrid = document.getElementById('newsGrid');
+            const pagination = document.getElementById('pagination');
+
+            // Show loading, hide others
+            loading.classList.remove('hidden');
+            error.classList.add('hidden');
+            newsGrid.classList.add('hidden');
+            pagination.classList.add('hidden');
+
+            try {
+                const queryString = buildQueryString(page);
+                const response = await fetch(`${API_URL}?${queryString}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.statusCode === 200 && result.data) {
+                    displayNews(result.data.items);
+                    setupPagination(result.data);
+
+                    // Hide loading, show content
+                    loading.classList.add('hidden');
+                    newsGrid.classList.remove('hidden');
+
+                    if (result.data.totalPages > 1) {
+                        pagination.classList.remove('hidden');
+                    }
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (err) {
+                console.error('Error fetching news:', err);
+                loading.classList.add('hidden');
+                error.classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = err.message;
+            }
+        }
+
+        // Display news cards
+        function displayNews(newsItems) {
+            const newsGrid = document.getElementById('newsGrid');
+            newsGrid.innerHTML = '';
+
+            newsItems.forEach(article => {
+                const card = createNewsCard(article);
+                newsGrid.appendChild(card);
+            });
+        }
+
+        // Create a news card element
+        function createNewsCard(article) {
+            const card = document.createElement('div');
+            card.className = `
+                group relative flex flex-col bg-white/70 dark:bg-white
+                backdrop-blur-xl border border-white-200
+                rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl
+                transition-all duration-300 hover:-translate-y-1
+            `;
+
+            const date = new Date(article.createdDate);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const truncatedContent = article.newsContent.length > 150
+                ? article.newsContent.substring(0, 150) + '...'
+                : article.newsContent;
+
+            card.innerHTML = `
+                <div class="p-5 flex flex-col flex-grow">
+
+                    <!-- Category -->
+                    <span class="inline-block self-start px-3 py-1 bg-purple-500
+                        text-white text-xs font-semibold rounded-full mb-5">
+                        ${article.categoryName}
+                    </span>
+
+                    <!-- Title -->
+                    <h3 class="text-2xl font-extrabold text-gray-900 dark:text-purple-600 mb-2 leading-snug group-hover:text-purple-800 transition">
+                        ${article.newsTitle}
+                    </h3>
+
+                    <!-- Headline -->
+                    <p class="text-gray-400 text-sm mb-3 italic">
+                        ${article.headline}
+                    </p>
+
+                    <!-- Content -->
+                    <p class="text-gray-600 text-sm mb-5 line-clamp-3">
+                        ${truncatedContent}
+                    </p>
+
+                    <!-- Meta -->
+                    <div class="mt-auto flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 pt-3">
+                        <span>${formattedDate}</span>
+                        ${article.newsSource !== 'N/A' ? `<span class="italic">Source: ${article.newsSource}</span>` : ''}
+                    </div>
+
+                    <!-- Tags -->
+                    ${article.tags && article.tags.length > 0 ? `
+                        <div class="flex flex-wrap gap-2 mt-3">
+                            ${article.tags.map(tag => `
+                                <span class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-100 text-gray-700 dark:text-gray-700 rounded-md">
+                                    #${tag.tagName}
+                                </span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    <!-- Read More -->
+                    <button onclick="viewArticle('${article.newsArticleId}')"
+                        class="mt-5 w-full bg-gradient-to-r from-purple-600 to-pink-500
+                        text-white py-2 rounded-xl font-semibold shadow-md
+                        hover:opacity-90 hover:shadow-lg transition duration-300">
+                        Read More
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function setupPagination(data) {
+            currentPage = data.page;
+            totalPages = data.totalPages;
+
+            const pageInfo = document.getElementById('pageInfo');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+            prevBtn.disabled = !data.hasPrevious;
+            nextBtn.disabled = !data.hasNext;
+
+            prevBtn.onclick = () => {
+                if (data.hasPrevious) {
+                    fetchNews(currentPage - 1);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+
+            nextBtn.onclick = () => {
+                if (data.hasNext) {
+                    fetchNews(currentPage + 1);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+        }
+
+        function viewArticle(articleId) {
+            window.location.href = `/News/Detail?articleId=${articleId}`;
+        }
+
+        async function loadTags() {
+            // const token = await ensureValidAccessToken();
+            // if (!token) {
+            //     window.location.href = "/Login";
+            //     return;
+            // }
+
+            $.ajax({
+                url: 'https://localhost:7000/api/tag',
+                type: 'GET',
+                success: function(response) {
+                    if (response.data && Array.isArray(response.data)) {
+                        const tagsList = $('#tagName');
+
+                        response.data.forEach(function(tag) {
+                            const tagHtml = `
+                                <option value="${tag.tagName}">${tag.tagName}</option>
+                            `;
+                            tagsList.append(tagHtml);
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to load tags:', error);
+                }
+            });
+        }
+
+        async function loadCategories() {
+            // const token = await ensureValidAccessToken();
+            // if (!token) {
+            //     window.location.href = "/Login";
+            //     return;
+            // }
+
+            $.ajax({
+                url: 'https://localhost:7000/api/Category',
+                type: 'GET',
+                success: function(response) {
+                    if (response.data && Array.isArray(response.data)) {
+                        const categorySelect = $('#categoryId');
+
+                        response.data.forEach(function(category) {
+                            if (category.isActive) {
+                                categorySelect.append(`<option value="${category.categoryId}">${category.categoryName}</option>`);
+                            }
+
+                            if (category.childCategory && category.childCategory.length > 0) {
+                                category.childCategory.forEach(function(child) {
+                                    if (child.isActive) {
+                                        categorySelect.append(`<option value="${child.categoryId}">─ ${child.categoryName}</option>`);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Failed to load categories:', error);
+                    showError('Failed to load categories');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchNews(1);
+            loadTags();
+            loadCategories();
+        });
+    </script>
+}

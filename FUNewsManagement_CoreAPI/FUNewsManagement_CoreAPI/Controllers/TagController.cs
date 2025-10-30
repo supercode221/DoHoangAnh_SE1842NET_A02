@@ -70,11 +70,12 @@ namespace FUNewsManagement_CoreAPI.Controllers
         {
             try
             {
-                await _service.AddAsync(dto);
+                int addedid = await _service.AddAsync(dto);
 
                 return StatusCode(200, new APIResponse<string>()
                 {
                     StatusCode = 200,
+                    Data = addedid.ToString()
                 });
             }
             catch (Exception ex)

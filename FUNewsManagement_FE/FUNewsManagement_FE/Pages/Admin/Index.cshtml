@@ -1,0 +1,583 @@
+﻿@page
+@model DoHoangAnh_SE1842NET_A01_FE.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Account Management";
+}
+
+<div class="w-screen mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+        <div class="flex justify-between items-center">
+            <h1 class="text-4xl font-bold text-gray-800">
+                <i class="fas fa-users text-blue-600 mr-3"></i>Account Management
+            </h1>
+            <button id="addAccountBtn" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center gap-2">
+                <i class="fas fa-plus"></i>
+                <span>Add Account</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Search Input -->
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Search</label>
+                <input type="text" id="searchInput" placeholder="Search by name or email..."
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+
+            <!-- Role Filter -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Role</label>
+                <select id="roleFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option value="">All Roles</option>
+                    <option value="1">Staff</option>
+                    <option value="2">Lecturer</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mt-4 flex gap-3">
+            <button id="resetBtn" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                <i class="fas fa-redo mr-2"></i>Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="bg-white rounded-2xl shadow-xl p-12 text-center">
+        <i class="fas fa-spinner fa-spin text-5xl text-blue-600 mb-4"></i>
+        <p class="text-gray-600 text-lg">Loading accounts...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="hidden bg-red-50 border-2 border-red-200 rounded-2xl shadow-xl p-8 text-center">
+        <i class="fas fa-exclamation-circle text-5xl text-red-500 mb-4"></i>
+        <p class="text-red-700 text-lg font-semibold mb-2">Error</p>
+        <p id="errorMessage" class="text-red-600"></p>
+    </div>
+
+    <!-- Accounts Table -->
+    <div id="accountsTable" class="hidden bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold uppercase tracking-wider">Role</th>
+                        <th class="px-6 py-4 text-center text-sm font-bold uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="accountTableBody" class="divide-y divide-gray-200">
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden bg-white rounded-2xl shadow-xl p-12 text-center">
+        <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-600 text-lg">No accounts found</p>
+    </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div id="accountModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full my-8 transform transition-all">
+        <div class="p-8">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                <h2 id="modalTitle" class="text-2xl font-bold text-gray-800">
+                    <i class="fas fa-user-plus text-blue-600 mr-2"></i>Add Account
+                </h2>
+                <button id="closeModal" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="hidden bg-green-50 border-2 border-green-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                    <div>
+                        <p class="text-green-800 font-semibold">Success!</p>
+                        <p class="text-green-700 text-sm">Account saved successfully.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessageModal" class="hidden bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-2xl text-red-600"></i>
+                    <div>
+                        <p class="text-red-800 font-semibold">Error!</p>
+                        <p id="errorText" class="text-red-700 text-sm"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form id="accountForm" class="space-y-6">
+                <input type="hidden" id="accountId" value="0">
+                <input type="hidden" id="isEdit" value="false">
+
+                <!-- Name -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="accountName" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Enter account name">
+                </div>
+
+                <!-- Email -->
+                <div id="emailField">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Email <span class="text-red-500">*</span>
+                    </label>
+                    <input type="email" id="accountEmail" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Enter email address">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Role -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Role <span class="text-red-500">*</span>
+                        </label>
+                        <select id="accountRole" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="1">Staff</option>
+                            <option value="2">Lecturer</option>
+                        </select>
+                    </div>
+
+                    <!-- Password -->
+                    <div id="passwordField">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Password <span class="text-red-500">*</span>
+                        </label>
+                        <input type="password" id="accountPassword" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                               placeholder="Enter password">
+                    </div>
+                </div>
+            </form>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 pt-6 mt-6 border-t border-gray-200">
+                <button type="submit" form="accountForm" id="submitBtn"
+                        class="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
+                    <i class="fas fa-save"></i>
+                    <span>Save Account</span>
+                </button>
+                <button type="button" id="cancelBtn"
+                        class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-times mr-2"></i>Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all">
+        <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-100 rounded-full mb-4">
+                <i class="fas fa-trash-alt text-3xl text-red-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 text-center mb-2">Delete Account</h3>
+            <p class="text-gray-600 text-center mb-6">Are you sure you want to delete this account? This action cannot be undone.</p>
+            <div class="flex gap-4">
+                <button id="cancelDeleteBtn" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirmDeleteBtn" class="flex-1 bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="hidden fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all">
+    <p id="toastMessage" class="text-white font-medium"></p>
+</div>
+
+<script>
+    const API_BASE = 'https://localhost:7000/api/account';
+    let deleteAccountId = null;
+
+    $(document).ready(async function() {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        loadAccounts();
+
+        // Search functionality with debounce
+        let searchTimeout;
+        $('#searchInput').on('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                loadAccounts();
+            }, 500);
+        });
+
+        // Role filter change
+        $('#roleFilter').on('change', function() {
+            loadAccounts();
+        });
+
+        // Reset button
+        $('#resetBtn').click(function() {
+            $('#searchInput').val('');
+            $('#roleFilter').val('');
+            loadAccounts();
+        });
+
+        // Add account button
+        $('#addAccountBtn').click(function() {
+            resetForm();
+            $('#modalTitle').html('<i class="fas fa-user-plus text-blue-600 mr-2"></i>Add Account');
+            $('#isEdit').val('false');
+            $('#emailField').show();
+            $('#passwordField').show();
+            $('#accountEmail').prop('required', true);
+            $('#accountPassword').prop('required', true);
+            $('#accountModal').removeClass('hidden');
+        });
+
+        // Close modal
+        $('#closeModal, #cancelBtn').click(function() {
+            $('#accountModal').addClass('hidden');
+            $('#successMessage').addClass('hidden');
+            $('#errorMessageModal').addClass('hidden');
+        });
+
+        // Cancel delete
+        $('#cancelDeleteBtn').click(function() {
+            $('#deleteModal').addClass('hidden');
+            deleteAccountId = null;
+        });
+
+        // Form submit
+        $('#accountForm').submit(function(e) {
+            e.preventDefault();
+            const isEdit = $('#isEdit').val() === 'true';
+            if (isEdit) {
+                updateAccount();
+            } else {
+                createAccount();
+            }
+        });
+
+        // Confirm delete
+        $('#confirmDeleteBtn').click(function() {
+            if (deleteAccountId) {
+                deleteAccount(deleteAccountId);
+            }
+        });
+
+        // Close modals when clicking outside
+        $('#accountModal').click(function(e) {
+            if (e.target.id === 'accountModal') {
+                $(this).addClass('hidden');
+            }
+        });
+
+        $('#deleteModal').click(function(e) {
+            if (e.target.id === 'deleteModal') {
+                $(this).addClass('hidden');
+                deleteAccountId = null;
+            }
+        });
+    });
+
+    async function loadAccounts() {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        const searchQuery = $('#searchInput').val().trim();
+        const roleFilter = $('#roleFilter').val();
+
+        let filters = [];
+        if (searchQuery) {
+            filters.push(`contains(tolower(AccountName), tolower('${searchQuery}')) or contains(tolower(AccountEmail), tolower('${searchQuery}'))`);
+        }
+        if (roleFilter) {
+            filters.push(`AccountRole eq ${roleFilter}`);
+        }
+
+        let url = API_BASE;
+        if (filters.length > 0) {
+            url += `?$filter=${filters.join(' and ')}`;
+        }
+
+        $('#loading').show();
+        $('#accountsTable').addClass('hidden');
+        $('#emptyState').addClass('hidden');
+        $('#error').addClass('hidden');
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                $('#loading').hide();
+                if (response.value && response.value.length > 0) {
+                    displayAccounts(response.value);
+                    $('#accountsTable').removeClass('hidden');
+                } else {
+                    $('#emptyState').removeClass('hidden');
+                }
+            },
+            error: function(xhr) {
+                $('#loading').hide();
+                showError('Error loading accounts: ' + (xhr.responseJSON?.message || 'Unknown error'));
+            }
+        });
+    }
+
+    function displayAccounts(accounts) {
+        const tbody = $('#accountTableBody');
+        tbody.empty();
+
+        accounts.forEach((account, index) => {
+            const roleText = account.AccountRole === 1 ? 'Staff' : 'Lecturer';
+            const roleBadge = account.AccountRole === 1
+                ? '<span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">Staff</span>'
+                : '<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Lecturer</span>';
+
+            const row = `
+                <tr class="hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${account.AccountId}</td>
+                    <td class="px-6 py-4 text-sm font-semibold text-gray-900">${account.AccountName}</td>
+                    <td class="px-6 py-4 text-sm text-gray-700">${account.AccountEmail}</td>
+                    <td class="px-6 py-4">${roleBadge}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="editAccount(${account.AccountId})" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="showDeleteModal(${account.AccountId})" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            tbody.append(row);
+        });
+    }
+
+    async function createAccount() {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        const data = {
+            accountId: 0,
+            accountName: $('#accountName').val(),
+            accountEmail: $('#accountEmail').val(),
+            accountRole: parseInt($('#accountRole').val()),
+            accountPassword: $('#accountPassword').val()
+        };
+
+        $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Creating...');
+
+        $.ajax({
+            url: API_BASE,
+            method: 'POST',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            data: JSON.stringify(data),
+            success: function(response) {
+                if (response.statusCode === 400) {
+                    showModalError(response.message);
+                } else {
+                    showModalSuccess();
+                    setTimeout(function() {
+                        $('#accountModal').addClass('hidden');
+                        loadAccounts();
+                        $('#submitBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Save Account</span>');
+                    }, 1500);
+                }
+            },
+            error: function(xhr) {
+                const error = xhr.responseJSON;
+                showModalError(error?.message || 'Error creating account');
+                $('#submitBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Save Account</span>');
+            }
+        });
+    }
+
+    async function editAccount(id) {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        $.ajax({
+            url: `${API_BASE}/${id}`,
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(account) {
+                $('#accountId').val(account.accountId);
+                $('#accountName').val(account.accountName);
+                $('#accountRole').val(account.accountRole);
+                $('#isEdit').val('true');
+                $('#modalTitle').html('<i class="fas fa-user-edit text-blue-600 mr-2"></i>Edit Account');
+                $('#emailField').hide();
+                $('#passwordField').hide();
+                $('#accountEmail').prop('required', false);
+                $('#accountPassword').prop('required', false);
+                $('#accountModal').removeClass('hidden');
+            },
+            error: function() {
+                showToast('Error loading account details', 'error');
+            }
+        });
+    }
+
+    async function updateAccount() {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        const id = $('#accountId').val();
+        const data = {
+            accountName: $('#accountName').val(),
+            accountRole: parseInt($('#accountRole').val())
+        };
+
+        $('#submitBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Updating...');
+
+        $.ajax({
+            url: `${API_BASE}/${id}`,
+            method: 'PUT',
+            contentType: 'application/json',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            data: JSON.stringify(data),
+            success: function(response) {
+                showModalSuccess();
+                setTimeout(function() {
+                    $('#accountModal').addClass('hidden');
+                    loadAccounts();
+                    $('#submitBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Save Account</span>');
+                }, 1500);
+            },
+            error: function() {
+                showModalError('Error updating account');
+                $('#submitBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Save Account</span>');
+            }
+        });
+    }
+
+    function showDeleteModal(id) {
+        deleteAccountId = id;
+        $('#deleteModal').removeClass('hidden');
+    }
+
+    async function deleteAccount(id) {
+        const token = await ensureValidAccessToken();
+        if (!token) {
+            window.location.href = "/Login";
+            return;
+        }
+
+        $.ajax({
+            url: `${API_BASE}/${id}`,
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function(response) {
+                showToast(response.message || 'Account deleted successfully', 'success');
+                $('#deleteModal').addClass('hidden');
+                deleteAccountId = null;
+                loadAccounts();
+            },
+            error: function(error) {
+                showToast(error.responseJSON?.message || 'Error deleting account', 'error');
+                $('#deleteModal').addClass('hidden');
+                deleteAccountId = null;
+            }
+        });
+    }
+
+    function resetForm() {
+        $('#accountForm')[0].reset();
+        $('#accountId').val('0');
+        $('#successMessage').addClass('hidden');
+        $('#errorMessageModal').addClass('hidden');
+    }
+
+    function showModalSuccess() {
+        $('#successMessage').removeClass('hidden');
+        $('#errorMessageModal').addClass('hidden');
+        $('#accountModal .p-8').scrollTop(0);
+    }
+
+    function showModalError(message) {
+        $('#errorText').text(message);
+        $('#errorMessageModal').removeClass('hidden');
+        $('#successMessage').addClass('hidden');
+        $('#accountModal .p-8').scrollTop(0);
+    }
+
+    function showError(message) {
+        $('#errorMessage').text(message);
+        $('#error').removeClass('hidden');
+    }
+
+    function showToast(message, type) {
+        const toast = $('#toast');
+        const toastMessage = $('#toastMessage');
+
+        toast.removeClass('bg-green-500 bg-red-500 bg-blue-500');
+
+        if (type === 'success') {
+            toast.addClass('bg-green-500');
+        } else if (type === 'error') {
+            toast.addClass('bg-red-500');
+        } else {
+            toast.addClass('bg-blue-500');
+        }
+
+        toastMessage.text(message);
+        toast.removeClass('hidden');
+
+        setTimeout(() => {
+            toast.addClass('hidden');
+        }, 3000);
+    }
+</script>

@@ -1,10 +1,11 @@
 ﻿using FUNewsManagement_AnalyticsAPI.BLL.Interfaces;
 using FUNewsManagement_AnalyticsAPI.DTOs.NewsArticle;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FUNewsManagement_AnalyticsAPI.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("api/analytics")]
     [ApiController]
     public class AnalyticsController : ControllerBase
@@ -33,8 +34,38 @@ namespace FUNewsManagement_AnalyticsAPI.Controllers
         [HttpGet("export")]
         public async Task<IActionResult> ExportAnalytics()
         {
-            var downloadLink = await _service.ExportAnalytics();
-            return Ok(downloadLink);
+            try
+            {
+                var filePath = await _service.ExportAnalytics();
+
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return NotFound(new { message = "Export file not found" });
+                }
+
+                var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+
+                var fileName = Path.GetFileName(filePath);
+
+                try
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                catch
+                {
+
+                }
+
+                return File(
+                    fileBytes,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error exporting analytics", error = ex.Message });
+            }
         }
     }
 }

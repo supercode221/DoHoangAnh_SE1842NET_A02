@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace FUNewsManagement_FE.Pages
+namespace DoHoangAnh_SE1842NET_A01_FE.Pages
 {
     public class IndexModel : PageModel
     {

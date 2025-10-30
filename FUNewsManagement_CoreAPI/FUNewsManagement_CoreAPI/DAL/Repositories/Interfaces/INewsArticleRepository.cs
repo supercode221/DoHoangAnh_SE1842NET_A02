@@ -10,5 +10,6 @@ namespace FUNMS.DAL.Repositories.Interfaces
         Task<(NewsArticle? news, IEnumerable<NewsArticle> related)> GetNewsDetailByIdWithRelated(string id);
         Task<NewsArticle?> GetNewsDetailById(string id);
         Task<NewsArticle?> GetByIdWithTagsAsync(string id);
+        Task IncreaseNewsView(string id);
     }
 }

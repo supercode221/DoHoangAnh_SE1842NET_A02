@@ -15,10 +15,12 @@ namespace FUNewsManagement_CoreAPI.Controllers
     {
 
         private readonly INewsService _service;
+        private readonly INotificationService _notificationService;
 
-        public NewsController(INewsService service)
+        public NewsController(INewsService service, INotificationService notificationService)
         {
             _service = service;
+            _notificationService = notificationService;
         }
 
         [EnableQuery]
@@ -75,6 +77,9 @@ namespace FUNewsManagement_CoreAPI.Controllers
             try
             {
                 var result = await _service.GetNewsDetailWithRelatedAsync(id);
+
+                await _service.IncreaseNewsView(id);
+
                 return StatusCode(200, new APIResponse<NewsArticleViewDTO>
                 {
                     StatusCode = 200,
@@ -120,6 +125,9 @@ namespace FUNewsManagement_CoreAPI.Controllers
             try
             {
                 await _service.DuplicateNews(id, short.Parse(User.FindFirst("UserId")?.Value));
+
+                await _notificationService.SendToAll("A news was published recently!");
+
                 return StatusCode(200, new APIResponse<string>
                 {
                     StatusCode = 200,
@@ -144,6 +152,9 @@ namespace FUNewsManagement_CoreAPI.Controllers
                 var userId = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
                 dto.CreatedById = short.Parse(userId);
                 await _service.AddNewNews(dto);
+
+                await _notificationService.SendToAll("A news was published recently!");
+
                 return StatusCode(200, new APIResponse<string>
                 {
                     StatusCode = 200,

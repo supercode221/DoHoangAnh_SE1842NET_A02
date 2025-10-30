@@ -1,0 +1,552 @@
+﻿@page
+@model DoHoangAnh_SE1842NET_A01_FE.Pages.Staff.CategoryModel
+@{
+    ViewData["Title"] = "Category Management";
+}
+
+<div class="w-screen mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8">
+        <div class="flex justify-between items-center">
+            <h1 class="text-4xl font-bold text-gray-800">
+                <i class="fas fa-folder-open text-purple-600 mr-3"></i>Category Management
+            </h1>
+            <button id="addCategoryBtn" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center gap-2">
+                <i class="fas fa-plus"></i>
+                <span>Add Category</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="bg-white rounded-2xl shadow-xl p-12 text-center">
+        <i class="fas fa-spinner fa-spin text-5xl text-purple-600 mb-4"></i>
+        <p class="text-gray-600 text-lg">Loading categories...</p>
+    </div>
+
+    <!-- Categories Grid -->
+    <div id="categoriesContainer" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Categories will be loaded here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden bg-white rounded-2xl shadow-xl p-12 text-center">
+        <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+        <p class="text-gray-600 text-lg">No categories found</p>
+    </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all">
+        <div class="p-8">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+                <h2 id="modalTitle" class="text-2xl font-bold text-gray-800">
+                    <i class="fas fa-plus-circle text-purple-600 mr-2"></i>Add Category
+                </h2>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="hidden bg-green-50 border-2 border-green-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                    <div>
+                        <p class="text-green-800 font-semibold">Success!</p>
+                        <p class="text-green-700 text-sm" id="successText"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="hidden bg-red-50 border-2 border-red-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-2xl text-red-600"></i>
+                    <div>
+                        <p class="text-red-800 font-semibold">Error!</p>
+                        <p class="text-red-700 text-sm" id="errorText"></p>
+                    </div>
+                </div>
+            </div>
+
+            <form id="categoryForm" class="space-y-6">
+                <input type="hidden" id="categoryId">
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Category Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="categoryName" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Description
+                    </label>
+                    <textarea id="categoryDescription" rows="3"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Parent Category
+                    </label>
+                    <select id="parentCategoryId"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none">
+                        <option value="">None (Main Category)</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <input type="checkbox" id="isActive" checked class="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500">
+                    <label for="isActive" class="text-sm font-semibold text-gray-700">Active Status</label>
+                </div>
+            </form>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 pt-6 mt-6 border-t border-gray-200">
+                <button type="button" id="submitBtn"
+                        class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2">
+                    <i class="fas fa-save"></i>
+                    <span>Save Category</span>
+                </button>
+                <button type="button" id="cancelBtn"
+                        class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-times mr-2"></i>Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all">
+        <div class="p-8">
+            <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-100 rounded-full mb-4">
+                <i class="fas fa-trash-alt text-3xl text-red-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 text-center mb-2">Delete Category</h3>
+            <p class="text-gray-600 text-center mb-6">Are you sure you want to delete this category? This action cannot be undone.</p>
+            <div class="flex gap-4">
+                <button id="cancelDeleteBtn" class="flex-1 bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirmDeleteBtn" class="flex-1 bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(async function() {
+            let categories = [];
+            let selectedCategoryId = null;
+
+            const token = await ensureValidAccessToken();
+                if (!token) {
+                    window.location.href = "/Login";
+                    return;
+                }
+
+            // Load categories
+            async function loadCategories() {
+                const token = await ensureValidAccessToken();
+                if (!token) {
+                    window.location.href = "/Login";
+                    return;
+                }
+
+                $('#loading').show();
+                $('#categoriesContainer').addClass('hidden');
+                $('#emptyState').addClass('hidden');
+
+                $.ajax({
+                    url: 'https://localhost:7000/api/Category',
+                    type: 'GET',
+                    success: function(response) {
+                        $('#loading').hide();
+                        if (response.statusCode === 200) {
+                            categories = response.data;
+                            if (categories.length > 0) {
+                                renderCategories();
+                                updateParentCategoryDropdown();
+                                $('#categoriesContainer').removeClass('hidden');
+                            } else {
+                                $('#emptyState').removeClass('hidden');
+                            }
+                        }
+                    },
+                    error: function() {
+                        $('#loading').hide();
+                        showError('Failed to load categories');
+                    }
+                });
+            }
+
+            // Render categories
+            function renderCategories() {
+                const container = $('#categoriesContainer');
+                container.empty();
+
+                categories.forEach(category => {
+                    container.append(createCategoryCard(category));
+                });
+            }
+
+            // Create category card HTML
+            function createCategoryCard(category) {
+                const statusBadge = category.isActive
+                    ? '<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Active</span>'
+                    : '<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">Inactive</span>';
+
+                const subcategoriesHtml = category.childCategory && category.childCategory.length > 0 ? `
+                    <div class="mb-4 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <p class="text-xs font-bold text-purple-900 flex items-center gap-2">
+                                <i class="fas fa-layer-group"></i>
+                                Subcategories (${category.childCategory.length})
+                            </p>
+                        </div>
+                        <div class="space-y-2">
+                            ${category.childCategory.map(child => `
+                                <div class="flex items-center justify-between p-2 bg-white rounded-lg group hover:shadow-md transition-all">
+                                    <div class="flex items-center gap-2 flex-1">
+                                        <i class="fas fa-chevron-right text-purple-400"></i>
+                                        <span class="text-xs text-purple-700 font-medium">${escapeHtml(child.categoryName)}</span>
+                                        ${child.isActive
+                                            ? '<span class="px-2 py-0.5 bg-green-100 text-green-600 rounded text-xs">Active</span>'
+                                            : '<span class="px-2 py-0.5 bg-gray-100 text-gray-600 rounded text-xs">Inactive</span>'
+                                        }
+                                    </div>
+                                    <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button class="editSubcategoryBtn text-blue-500 hover:text-blue-700 p-1" data-id="${child.categoryId}" title="Edit">
+                                            <i class="fas fa-edit text-sm"></i>
+                                        </button>
+                                        <button class="deleteSubcategoryBtn text-red-500 hover:text-red-700 p-1" data-id="${child.categoryId}" title="Delete">
+                                            <i class="fas fa-trash text-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : `
+                    <div class="mb-4 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+                        <div class="flex items-center justify-between">
+                            <p class="text-xs font-bold text-purple-900 flex items-center gap-2">
+                                <i class="fas fa-layer-group"></i>
+                                No Subcategories
+                            </p>
+                        </div>
+                    </div>
+                `;
+
+                return `
+                    <div class="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 transform hover:scale-105">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex items-center gap-3 flex-1">
+                                <div class="w-12 h-12 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-folder text-white text-xl"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900">${escapeHtml(category.categoryName)}</h3>
+                            </div>
+                            ${statusBadge}
+                        </div>
+
+                        <p class="text-gray-600 text-sm mb-4 min-h-[40px]">${escapeHtml(category.categoryDesciption || 'No description available')}</p>
+
+                        ${subcategoriesHtml}
+
+                        <div class="flex gap-2 pt-4 border-t border-gray-200">
+                            <button class="flex-1 py-2 px-4 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 editBtn" data-id="${category.categoryId}">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                            <button class="flex-1 py-2 px-4 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors flex items-center justify-center gap-2 deleteBtn" data-id="${category.categoryId}">
+                                <i class="fas fa-trash"></i>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Update parent category dropdown
+            function updateParentCategoryDropdown(excludeId = null) {
+                const select = $('#parentCategoryId');
+                const currentValue = select.val();
+                select.html('<option value="">None (Main Category)</option>');
+
+                categories.forEach(category => {
+                    if (category.parentCategoryId === null && category.categoryId !== excludeId) {
+                        select.append(`<option value="${category.categoryId}">${escapeHtml(category.categoryName)}</option>`);
+                    }
+                });
+
+                select.val(currentValue);
+            }
+
+            // Show success message
+            function showSuccess(message) {
+                $('#successText').text(message);
+                $('#successMessage').removeClass('hidden');
+                $('#errorMessage').addClass('hidden');
+                $('#categoryModal .p-8').scrollTop(0);
+
+                setTimeout(function() {
+                    $('#successMessage').addClass('hidden');
+                }, 3000);
+            }
+
+            // Show error message
+            function showError(message) {
+                $('#errorText').text(message);
+                $('#errorMessage').removeClass('hidden');
+                $('#successMessage').addClass('hidden');
+                $('#categoryModal .p-8').scrollTop(0);
+            }
+
+            // Escape HTML
+            function escapeHtml(text) {
+                if (!text) return '';
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // Add main category button
+            $('#addCategoryBtn').click(function() {
+                $('#categoryForm')[0].reset();
+                $('#categoryId').val('');
+                $('#parentCategoryId').val('');
+                updateParentCategoryDropdown();
+                $('#modalTitle').html('<i class="fas fa-plus-circle text-purple-600 mr-2"></i>Add Category');
+                $('#successMessage').addClass('hidden');
+                $('#errorMessage').addClass('hidden');
+                $('#categoryModal').removeClass('hidden');
+            });
+
+            // Add subcategory button
+            $(document).on('click', '.addSubcategoryBtn', function() {
+                const parentId = $(this).data('parent-id');
+                $('#categoryForm')[0].reset();
+                $('#categoryId').val('');
+                $('#parentCategoryId').val(parentId);
+                updateParentCategoryDropdown();
+                $('#modalTitle').html('<i class="fas fa-plus-circle text-purple-600 mr-2"></i>Add Subcategory');
+                $('#successMessage').addClass('hidden');
+                $('#errorMessage').addClass('hidden');
+                $('#categoryModal').removeClass('hidden');
+            });
+
+            // Close modal
+            $('#closeModalBtn, #cancelBtn').click(function() {
+                $('#categoryModal').addClass('hidden');
+            });
+
+            // Form submit
+            $('#submitBtn').click(async function(e) {
+                e.preventDefault();
+
+                const token = await ensureValidAccessToken();
+                if (!token) {
+                    window.location.href = "/Login";
+                    return;
+                }
+
+                const categoryId = $('#categoryId').val();
+
+                const url = categoryId ? 'https://localhost:7000/api/Category' : 'https://localhost:7000/api/Category';
+                const method = categoryId ? 'PUT' : 'POST';
+
+                let data = { };
+
+                if(method === "PUT") {
+                    data = {
+                        CategoryName: $('#categoryName').val(),
+                        CategoryDescription: $('#categoryDescription').val(),
+                        categoryId: categoryId ? parseInt(categoryId) : 0,
+                        parentCategoryId: $('#parentCategoryId').val() ? parseInt($('#parentCategoryId').val()) : null,
+                        isActive: $('#isActive').is(':checked')
+                    };
+
+                    if (!data.CategoryName) {
+                        showError('Please enter a category name');
+                        return;
+                    }
+
+                    if (!data.CategoryDescription) {
+                        showError('Please enter a category description');
+                        return;
+                    }
+                } else {
+                    data = {
+                        name: $('#categoryName').val(),
+                        description: $('#categoryDescription').val(),
+                        id: categoryId ? parseInt(categoryId) : 0,
+                        categoryId: $('#parentCategoryId').val() ? parseInt($('#parentCategoryId').val()) : 0,
+                        isActive: $('#isActive').is(':checked')
+                    };
+
+                    if (!data.name) {
+                        showError('Please enter a category name');
+                        return;
+                    }
+
+                    if (!data.description) {
+                        showError('Please enter a category description');
+                        return;
+                    }
+                }
+
+                const buttonText = categoryId ? 'Updating...' : 'Creating...';
+
+                $('#submitBtn').prop('disabled', true).html(`<i class="fas fa-spinner fa-spin mr-2"></i>${buttonText}`);
+
+                $.ajax({
+                    url: url,
+                    type: method,
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        if (response.statusCode === 201 || response.statusCode === 200) {
+                            showSuccess(response.message);
+                            setTimeout(function() {
+                                $('#categoryModal').addClass('hidden');
+                                loadCategories();
+                                $('#submitBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Save Category</span>');
+                            }, 1500);
+                        } else {
+                            showError(response.message);
+                            $('#submitBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Save Category</span>');
+                        }
+                    },
+                    error: function(xhr) {
+                        const message = xhr.responseJSON?.message || 'An error occurred';
+                        showError(message);
+                        $('#submitBtn').prop('disabled', false).html('<i class="fas fa-save"></i><span>Save Category</span>');
+                    }
+                });
+            });
+
+            // Edit main category
+            $(document).on('click', '.editBtn', async function() {
+                const token = await ensureValidAccessToken();
+                if (!token) {
+                    window.location.href = "/Login";
+                    return;
+                }
+
+                const id = $(this).data('id');
+                const category = categories.find(c => c.categoryId === id);
+
+                if (category) {
+                    $('#categoryId').val(category.categoryId);
+                    $('#categoryName').val(category.categoryName);
+                    $('#categoryDescription').val(category.categoryDesciption);
+                    $('#parentCategoryId').val(category.parentCategoryId || '');
+                    $('#isActive').prop('checked', category.isActive);
+                    updateParentCategoryDropdown(category.categoryId);
+                    $('#modalTitle').html('<i class="fas fa-edit text-purple-600 mr-2"></i>Edit Category');
+                    $('#successMessage').addClass('hidden');
+                    $('#errorMessage').addClass('hidden');
+                    $('#categoryModal').removeClass('hidden');
+                }
+            });
+
+            // Edit subcategory
+            $(document).on('click', '.editSubcategoryBtn', async function() {
+                const token = await ensureValidAccessToken();
+                if (!token) {
+                    window.location.href = "/Login";
+                    return;
+                }
+
+                const id = $(this).data('id');
+
+                // Find the subcategory in the nested structure
+                let subcategory = null;
+                for (const cat of categories) {
+                    if (cat.childCategory) {
+                        subcategory = cat.childCategory.find(c => c.categoryId === id);
+                        if (subcategory) break;
+                    }
+                }
+
+                if (subcategory) {
+                    $('#categoryId').val(subcategory.categoryId);
+                    $('#categoryName').val(subcategory.categoryName);
+                    $('#categoryDescription').val(subcategory.categoryDesciption);
+                    $('#parentCategoryId').val(subcategory.parentCategoryId || '');
+                    $('#isActive').prop('checked', subcategory.isActive);
+                    updateParentCategoryDropdown(subcategory.categoryId);
+                    $('#modalTitle').html('<i class="fas fa-edit text-purple-600 mr-2"></i>Edit Subcategory');
+                    $('#successMessage').addClass('hidden');
+                    $('#errorMessage').addClass('hidden');
+                    $('#categoryModal').removeClass('hidden');
+                }
+            });
+
+            // Delete main category
+            $(document).on('click', '.deleteBtn', function() {
+                selectedCategoryId = $(this).data('id');
+                $('#deleteModal').removeClass('hidden');
+            });
+
+            // Delete subcategory
+            $(document).on('click', '.deleteSubcategoryBtn', function() {
+                selectedCategoryId = $(this).data('id');
+                $('#deleteModal').removeClass('hidden');
+            });
+
+            $('#cancelDeleteBtn').click(function() {
+                $('#deleteModal').addClass('hidden');
+                selectedCategoryId = null;
+            });
+
+            $('#confirmDeleteBtn').click(async function() {
+                const token = await ensureValidAccessToken();
+                if (!token) {
+                    window.location.href = "/Login";
+                    return;
+                }
+
+                $('#confirmDeleteBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Deleting...');
+
+                $.ajax({
+                    url: `https://localhost:7000/api/Category/${selectedCategoryId}`,
+                    type: 'DELETE',
+                    success: function(response) {
+                        if (response.statusCode === 200) {
+                            $('#deleteModal').addClass('hidden');
+                            loadCategories();
+                        }
+                        $('#confirmDeleteBtn').prop('disabled', false).html('Delete');
+                    },
+                    error: function(err) {
+                        showError('Failed to delete category');
+                        alert(err.responseJSON.message);
+                        $('#deleteModal').addClass('hidden');
+                        $('#confirmDeleteBtn').prop('disabled', false).html('Delete');
+                    }
+                });
+            });
+
+            $('#categoryModal, #deleteModal').click(function(e) {
+                if (e.target === this) {
+                    $(this).addClass('hidden');
+                }
+            });
+
+            loadCategories();
+        });
+    </script>
+}
